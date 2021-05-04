@@ -14,12 +14,8 @@ function App() {
           path={ROUTES.REGISTER}
           exact
         />
-        <PublicRoute
-          // restricted
-          component={COMPONENTS.Login}
-          path={ROUTES.LOGIN}
-          exact
-        />
+        <PublicRoute component={COMPONENTS.Login} path={ROUTES.LOGIN} exact />
+        <PublicRoute component={COMPONENTS.PA} path={ROUTES.PA} exact />
         <PrivateRoute component={COMPONENTS.Home} path={ROUTES.HOME} exact />
       </Switch>
     </BrowserRouter>
