@@ -78,11 +78,12 @@ export function* addFeatureBindingSaga({ payload }) {
   try {
     const data = yield call(addFeatureBindingApi, payload);
     yield put(addFeatureBindingSuccess(data[0]?.fields));
+    yield put(getFeatureBindingRequest(payload.client));
   } catch (e) {
     yield put(addFeatureBindingFailed(e.message));
   }
 }
-//
+
 async function getMatrixBindingApi(clientId) {
   const resp = await axios.get(`/pa/matrix-binding?client_id=${clientId}`);
   return resp.data;
@@ -106,11 +107,11 @@ export function* addMatrixBindingSaga({ payload }) {
   try {
     const data = yield call(addMatrixBindingApi, payload);
     yield put(addMatrixBindingSuccess(data[0]?.fields));
+    yield put(getMatrixBindingRequest(payload.client));
   } catch (e) {
     yield put(addMatrixBindingFailed(e.message));
   }
 }
-//
 
 async function getClientsApi() {
   const resp = await axios.get(`/pa/client`);

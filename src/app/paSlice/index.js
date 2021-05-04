@@ -3,9 +3,22 @@ import { createSlice } from "@reduxjs/toolkit";
 const paSlice = createSlice({
   name: "paSlice",
   initialState: {
-    clientBinding: {},
-    featureBinding: {},
-    matrixBinding: {},
+    clientBinding: {
+      client: "",
+      study_group: "",
+    },
+    featureBinding: {
+      client: "",
+      forecast: false,
+      portfolioView: false,
+      reforecast: false,
+    },
+    matrixBinding: {
+      client: "",
+      cost_matrix: false,
+      ctms_matrix: false,
+      design_optimization_matrix: false,
+    },
     clients: [],
     studyGroup: [],
     error: null,
@@ -61,6 +74,7 @@ const paSlice = createSlice({
       state.loading = false;
     },
     addFeatureBindingRequest: (state, action) => {
+      console.log("*****");
       state.loading = true;
     },
     addFeatureBindingSuccess: (state, action) => {
@@ -70,10 +84,10 @@ const paSlice = createSlice({
       state.loading = false;
     },
     getMatrixBindingRequest: (state, action) => {
-      state.matrixBinding = action.payload;
       state.loading = true;
     },
     getMatrixBindingSuccess: (state, action) => {
+      state.matrixBinding = action.payload;
       state.loading = false;
     },
     getMatrixBindingFailed: (state, action) => {
@@ -82,10 +96,10 @@ const paSlice = createSlice({
     addMatrixBindingRequest: (state, action) => {
       state.loading = true;
     },
-    addMmatrixBindingSuccess: (state, action) => {
+    addMatrixBindingSuccess: (state, action) => {
       state.loading = false;
     },
-    addMmatrixBindingFailed: (state, action) => {
+    addMatrixBindingFailed: (state, action) => {
       state.loading = false;
     },
   },
