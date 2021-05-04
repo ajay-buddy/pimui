@@ -55,6 +55,7 @@ const paSlice = createSlice({
       state.loading = false;
     },
     addClientBindingRequest: (state, action) => {
+      console.log("****", action);
       state.loading = true;
     },
     addClientBindingSuccess: (state, action) => {
