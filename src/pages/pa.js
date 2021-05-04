@@ -19,6 +19,7 @@ import {
 import Switch from "@material-ui/core/Switch";
 import SimpleModal from "../components/model";
 import history from "../history";
+import { ROUTES } from "../routes";
 
 const getValueById = (arr, id) => {
   let label = "";
@@ -41,14 +42,19 @@ export default function PAComponent() {
   const matrixBinding = useSelector(matrixBindingSelector);
   const dispatch = useDispatch();
   const { client_id } = useParams();
-  console.log(client_id);
   useEffect(() => {
-    dispatch(getClientBindingRequest("b1d59edf-d6f3-4c55-8570-e5a29513806f"));
+    dispatch(getClientBindingRequest(client_id));
     dispatch(getClientsRequest());
     dispatch(getStudyGroupRequest());
-    dispatch(getFeatureBindingRequest("b1d59edf-d6f3-4c55-8570-e5a29513806f"));
-    dispatch(getMatrixBindingRequest("b1d59edf-d6f3-4c55-8570-e5a29513806f"));
+    dispatch(getFeatureBindingRequest(client_id));
+    dispatch(getMatrixBindingRequest(client_id));
   }, []);
+
+  // if (
+  //   clientsList.length > 0 &&
+  //   !getValueById(clientsList, clientBinding.client)
+  // )
+  //   return history.push(ROUTES.HOME);
 
   return (
     <>
@@ -184,7 +190,7 @@ export default function PAComponent() {
                 onChange={(e) =>
                   dispatch(
                     addFeatureBindingRequest({
-                      client: "b1d59edf-d6f3-4c55-8570-e5a29513806f",
+                      client: client_id,
                       forecast: !featureBinding.forecast,
                       reforecast: featureBinding.reforecast,
                       portfolioView: featureBinding.portfolioView,
@@ -202,7 +208,7 @@ export default function PAComponent() {
                 onChange={(e) =>
                   dispatch(
                     addFeatureBindingRequest({
-                      client: "b1d59edf-d6f3-4c55-8570-e5a29513806f",
+                      client: client_id,
                       forecast: featureBinding.forecast,
                       reforecast: !featureBinding.reforecast,
                       portfolioView: featureBinding.portfolioView,
@@ -220,7 +226,7 @@ export default function PAComponent() {
                 onChange={(e) =>
                   dispatch(
                     addFeatureBindingRequest({
-                      client: "b1d59edf-d6f3-4c55-8570-e5a29513806f",
+                      client: client_id,
                       forecast: featureBinding.forecast,
                       reforecast: featureBinding.reforecast,
                       portfolioView: !featureBinding.portfolioView,
@@ -272,7 +278,7 @@ export default function PAComponent() {
                 onChange={() =>
                   dispatch(
                     addMatrixBindingRequest({
-                      client: "b1d59edf-d6f3-4c55-8570-e5a29513806f",
+                      client: client_id,
                       ctms_matrix: !matrixBinding.ctms_matrix,
                       design_optimization_matrix:
                         matrixBinding.design_optimization_matrix,
@@ -291,7 +297,7 @@ export default function PAComponent() {
                 onChange={() =>
                   dispatch(
                     addMatrixBindingRequest({
-                      client: "b1d59edf-d6f3-4c55-8570-e5a29513806f",
+                      client: client_id,
                       ctms_matrix: matrixBinding.ctms_matrix,
                       design_optimization_matrix: !matrixBinding.design_optimization_matrix,
                       cost_matrix: matrixBinding.cost_matrix,
@@ -309,7 +315,7 @@ export default function PAComponent() {
                 onChange={() =>
                   dispatch(
                     addMatrixBindingRequest({
-                      client: "b1d59edf-d6f3-4c55-8570-e5a29513806f",
+                      client: client_id,
                       ctms_matrix: matrixBinding.ctms_matrix,
                       design_optimization_matrix:
                         matrixBinding.design_optimization_matrix,

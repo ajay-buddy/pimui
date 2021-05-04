@@ -5,13 +5,9 @@ import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
 import { Button } from "@material-ui/core";
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
 function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
+  const top = 50;
+  const left = 50;
 
   return {
     top: `${top}%`,
@@ -23,7 +19,7 @@ function getModalStyle() {
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: "absolute",
-    width: 400,
+    width: 600,
     backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
@@ -40,11 +36,10 @@ export default function SimpleModal({
   handleSubmit,
 }) {
   const classes = useStyles();
-  const [modalStyle] = useState(getModalStyle);
   const [client, setClient] = useState();
   const [studyGroup, setStudyGroup] = useState();
   const body = (
-    <div style={modalStyle} className={classes.paper}>
+    <div style={getModalStyle()} className={classes.paper}>
       <h2 id="simple-modal-title">Edit Client Bindings</h2>
       <Dropdown
         options={clientsList}
@@ -53,6 +48,7 @@ export default function SimpleModal({
         placeholder="Select an option"
       />
       <Dropdown
+        disabled={true}
         options={studyGroupList}
         onChange={({ value }) => setStudyGroup(value)}
         value={studyGroup || clientBinding.study_group}
