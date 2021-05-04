@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import {
   getClientBindingRequest,
   clientBindingSelector,
@@ -17,8 +18,21 @@ import {
 } from "../app/paSlice";
 import Switch from "@material-ui/core/Switch";
 import SimpleModal from "../components/model";
+import history from "../history";
 
-export default function Register() {
+const getValueById = (arr, id) => {
+  let label = "";
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].value === id) {
+      label = arr[i].label;
+      break;
+    }
+  }
+
+  return label;
+};
+
+export default function PAComponent() {
   const [open, setOpen] = useState(false);
   const clientBinding = useSelector(clientBindingSelector);
   const clientsList = useSelector(clientsSelector);
@@ -26,7 +40,8 @@ export default function Register() {
   const featureBinding = useSelector(featureBindingSelector);
   const matrixBinding = useSelector(matrixBindingSelector);
   const dispatch = useDispatch();
-
+  const { client_id } = useParams();
+  console.log(client_id);
   useEffect(() => {
     dispatch(getClientBindingRequest("b1d59edf-d6f3-4c55-8570-e5a29513806f"));
     dispatch(getClientsRequest());
@@ -85,7 +100,13 @@ export default function Register() {
               style={{
                 padding: "10px 0px",
               }}
-            >{`${clientBinding.client} is to bound to id ${clientBinding.study_group}`}</div>
+            >{`${getValueById(
+              clientsList,
+              clientBinding.client
+            )} is to bound to id ${getValueById(
+              studyGroupList,
+              clientBinding.study_group
+            )}`}</div>
           </div>
         </div>
         <div
