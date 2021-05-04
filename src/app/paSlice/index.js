@@ -6,14 +6,36 @@ const paSlice = createSlice({
     clientBinding: {},
     featureBinding: {},
     matrixBinding: {},
+    clients: [],
+    studyGroup: [],
     error: null,
   },
   reducers: {
+    getClientsRequest: (state, action) => {
+      state.loading = true;
+    },
+    getClientsSuccess: (state, action) => {
+      state.clients = action.payload;
+      state.loading = true;
+    },
+    getClientsFailed: (state, action) => {
+      state.loading = true;
+    },
+    getStudyGroupRequest: (state, action) => {
+      state.loading = true;
+    },
+    getStudyGroupSuccess: (state, action) => {
+      state.studyGroup = action.payload;
+      state.loading = true;
+    },
+    getStudyGroupFailed: (state, action) => {
+      state.loading = true;
+    },
     getClientBindingRequest: (state, action) => {
       state.loading = true;
     },
     getClientBindingSuccess: (state, action) => {
-      console.log("****", action);
+      state.clientBinding = action.payload;
       state.loading = false;
     },
     getClientBindingFailed: (state, action) => {
@@ -32,6 +54,7 @@ const paSlice = createSlice({
       state.loading = true;
     },
     getFeatureBindingSuccess: (state, action) => {
+      state.featureBinding = action.payload;
       state.loading = false;
     },
     getFeatureBindingFailed: (state, action) => {
@@ -47,6 +70,7 @@ const paSlice = createSlice({
       state.loading = false;
     },
     getMatrixBindingRequest: (state, action) => {
+      state.matrixBinding = action.payload;
       state.loading = true;
     },
     getMatrixBindingSuccess: (state, action) => {
@@ -70,8 +94,16 @@ const paSlice = createSlice({
 export const clientBindingSelector = (state) => state.pa.clientBinding;
 export const featureBindingSelector = (state) => state.pa.featureBinding;
 export const matrixBindingSelector = (state) => state.pa.matrixBinding;
+export const clientsSelector = (state) => state.pa.clients;
+export const studyGroupSelector = (state) => state.pa.studyGroup;
 
 export const {
+  getClientsRequest,
+  getClientsSuccess,
+  getClientsFailed,
+  getStudyGroupRequest,
+  getStudyGroupSuccess,
+  getStudyGroupFailed,
   getClientBindingRequest,
   getClientBindingSuccess,
   getClientBindingFailed,
