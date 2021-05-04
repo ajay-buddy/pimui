@@ -25,15 +25,6 @@ export default function Register() {
   const studyGroupList = useSelector(studyGroupSelector);
   const featureBinding = useSelector(featureBindingSelector);
   const matrixBinding = useSelector(matrixBindingSelector);
-  // console.log(
-  //   "===>",
-  //   clientBinding,
-  //   clientsList,
-  //   studyGroupList,
-  //   featureBinding,
-  //   matrixBinding
-  // );
-  console.log("===>", clientBinding);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -53,7 +44,6 @@ export default function Register() {
         studyGroupList={studyGroupList}
         clientBinding={clientBinding}
         handleSubmit={(client, study_group) =>
-          console.log("===>", study_group) ||
           dispatch(
             addClientBindingRequest({
               client,

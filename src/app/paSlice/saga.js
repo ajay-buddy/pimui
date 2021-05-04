@@ -42,7 +42,6 @@ export function* getClientBindingSaga({ payload }) {
 }
 
 async function addClientBindingApi(data) {
-  console.log("---->", data);
   const resp = await axios.post(`/pa/client-binding`, data);
   return resp.data;
 }

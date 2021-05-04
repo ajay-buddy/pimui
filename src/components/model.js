@@ -43,7 +43,6 @@ export default function SimpleModal({
   const [modalStyle] = useState(getModalStyle);
   const [client, setClient] = useState();
   const [studyGroup, setStudyGroup] = useState();
-  console.log(" ))))", client, studyGroup);
   const body = (
     <div style={modalStyle} className={classes.paper}>
       <h2 id="simple-modal-title">Edit Client Bindings</h2>

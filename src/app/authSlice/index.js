@@ -13,7 +13,6 @@ const authSlice = createSlice({
       state.loading = true;
     },
     loginSuccess: (state, action) => {
-      console.log("===>", action);
       state.username = action.payload;
       state.isAuthenticated = true;
       state.loading = false;
@@ -25,7 +24,6 @@ const authSlice = createSlice({
       state.loading = true;
     },
     registerSuccess: (state, action) => {
-      console.log("===>", action);
       state.username = action.payload;
       state.isAuthenticated = true;
       state.loading = false;

@@ -22,7 +22,6 @@ export default function Register() {
         <Button
           disabled={!username || !password}
           onClick={() => {
-            console.log(username, password);
             dispatch(registerRequest({ username, password }));
           }}
         >
