@@ -5,6 +5,7 @@ import { ROUTES } from "./routes";
 const isAuthenticated = true;
 
 function PrivateRoute(props) {
+  console.log("===>");
   const { component: Component, ...rest } = props;
 
   const render = (props) => {
