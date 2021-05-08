@@ -5,7 +5,8 @@ import COMPONENTS from "./pages";
 import PrivateRoute from "./private-routes";
 import PublicRoute from "./public-routes";
 import HeaderAppBar from "./components/appbar";
-function App() {
+function App(props) {
+  console.log("********", props);
   return (
     <BrowserRouter>
       <HeaderAppBar />

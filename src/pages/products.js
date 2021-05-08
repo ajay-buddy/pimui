@@ -65,7 +65,7 @@ export default function Products() {
   }, []);
 
   const getList = () =>
-    productsList.map((item, index) =>
+    productsList?.map((item, index) =>
       createData(
         index + 1,
         item.name,
@@ -138,7 +138,7 @@ export default function Products() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {getList().map((row) => (
+            {getList()?.map((row) => (
               <StyledTableRow key={row.name}>
                 <StyledTableCell align="center">{row.sno}</StyledTableCell>
                 <StyledTableCell align="center">{row.name}</StyledTableCell>
