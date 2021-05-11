@@ -4,7 +4,7 @@ const orderSlice = createSlice({
   name: "orderSlice",
   initialState: {
     name: null,
-    SKU: null,
+    sku: null,
     price: null,
     loading: false,
     error: null,

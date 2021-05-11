@@ -4,7 +4,7 @@ const catagorySlice = createSlice({
   name: "catagorySlice",
   initialState: {
     name: null,
-    SKU: null,
+    sku: null,
     price: null,
     loading: false,
     error: null,

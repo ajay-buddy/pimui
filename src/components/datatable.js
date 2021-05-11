@@ -47,7 +47,7 @@ export default function Datatavle() {
   const classes = useStyles();
   const [adding, setAdding] = useState(false);
   const [name, setName] = useState("");
-  const [SKU, setSKU] = useState("");
+  const [sku, setSKU] = useState("");
   const [price, setPrice] = useState("");
   const dispatch = useDispatch();
   const productsList = useSelector(productSelector);
@@ -58,7 +58,7 @@ export default function Datatavle() {
 
   const getList = () =>
     productsList.map((item, index) =>
-      createData(index + 1, item.name, item.SKU, item.price)
+      createData(index + 1, item.name, item.sku, item.price)
     );
 
   return (
@@ -68,13 +68,13 @@ export default function Datatavle() {
         <Button onClick={() => setAdding(!adding)}>Add Products</Button>
       </div>
       {adding && (
-        <FormControl>
+        <div>
           <Input
             placeholder="Name"
             onChange={(event) => setName(event.target.value)}
           />
           <Input
-            placeholder="SKU"
+            placeholder="sku"
             onChange={(event) => setSKU(event.target.value)}
           />
           <Input
@@ -82,12 +82,12 @@ export default function Datatavle() {
             onChange={(event) => setPrice(event.target.value)}
           />
           <Button
-            disabled={!name || !SKU || !price}
+            disabled={!name || !sku || !price}
             onClick={() =>
               dispatch(
                 addProductRequest({
                   name,
-                  SKU,
+                  sku,
                   price,
                 })
               )
@@ -95,7 +95,7 @@ export default function Datatavle() {
           >
             Add
           </Button>
-        </FormControl>
+        </div>
       )}
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="customized table">
@@ -103,7 +103,7 @@ export default function Datatavle() {
             <TableRow>
               <StyledTableCell align="center">S.No</StyledTableCell>
               <StyledTableCell align="center">Name</StyledTableCell>
-              <StyledTableCell align="center">SKU</StyledTableCell>
+              <StyledTableCell align="center">sku</StyledTableCell>
               <StyledTableCell align="center">Price</StyledTableCell>
             </TableRow>
           </TableHead>

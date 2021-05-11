@@ -62,27 +62,33 @@ export default function Vendors() {
       <div>Vendors</div>
       <div>
         <Button onClick={() => setAdding(!adding)}>Add Vendors</Button>
-      </div>
-      {adding && (
-        <FormControl>
-          <Input
-            placeholder="Name"
-            onChange={(event) => setName(event.target.value)}
-          />
-          <Button
-            disabled={!name}
-            onClick={() =>
-              dispatch(
-                addVendorRequest({
-                  name,
-                })
-              )
-            }
+        {adding && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
           >
-            Add
-          </Button>
-        </FormControl>
-      )}
+            <Input
+              placeholder="Name"
+              onChange={(event) => setName(event.target.value)}
+            />
+            <Button
+              disabled={!name}
+              onClick={() =>
+                dispatch(
+                  addVendorRequest({
+                    name,
+                  })
+                )
+              }
+            >
+              Add
+            </Button>
+          </div>
+        )}
+      </div>
+
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="customized table">
           <TableHead>

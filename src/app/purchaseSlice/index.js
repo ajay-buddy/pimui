@@ -4,7 +4,7 @@ const purchaseSlice = createSlice({
   name: "purchaseSlice",
   initialState: {
     name: null,
-    SKU: null,
+    sku: null,
     price: null,
     loading: false,
     error: null,

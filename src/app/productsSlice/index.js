@@ -4,7 +4,7 @@ const productSlice = createSlice({
   name: "productSlice",
   initialState: {
     name: null,
-    SKU: null,
+    sku: null,
     price: null,
     loading: false,
     error: null,
@@ -12,6 +12,9 @@ const productSlice = createSlice({
   },
   reducers: {
     addProductRequest: (state, action) => {
+      state.loading = true;
+    },
+    addProductRequestBulk: (state, action) => {
       state.loading = true;
     },
     addProductSuccess: (state, action) => {
@@ -31,6 +34,9 @@ const productSlice = createSlice({
       state.loading = false;
     },
     editProductRequest: (state, action) => {
+      state.loading = true;
+    },
+    editProductBulkRequest: (state, action) => {
       state.loading = true;
     },
     editProductSuccess: (state, action) => {
@@ -55,12 +61,14 @@ export const productSelector = (state) => state.products.products;
 
 export const {
   addProductRequest,
+  addProductRequestBulk,
   addProductSuccess,
   addProductFailed,
   getProductRequest,
   getProductSuccess,
   getProductFailed,
   editProductRequest,
+  editProductBulkRequest,
   editProductSuccess,
   editProductFailed,
   deleteProductRequest,

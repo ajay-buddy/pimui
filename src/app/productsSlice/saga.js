@@ -1,12 +1,14 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import {
   addProductRequest,
+  addProductRequestBulk,
   addProductSuccess,
   addProductFailed,
   getProductRequest,
   getProductSuccess,
   getProductFailed,
   editProductRequest,
+  editProductBulkRequest,
   editProductSuccess,
   editProductFailed,
   deleteProductRequest,
@@ -30,8 +32,38 @@ export function* addProductSaga({ payload }) {
   }
 }
 
-async function editProductAPI({ id, name, SKU, price }) {
-  const resp = await axios.post(`products/${id}`, { name, SKU, price });
+async function addProductBulkAPI(payload) {
+  const resp = await axios.post("products/bulk", payload);
+  return resp.data;
+}
+
+export function* addProductBulkSaga({ payload }) {
+  try {
+    const product = yield call(addProductBulkAPI, payload);
+    yield put(addProductSuccess(product));
+    // yield put(getProductRequest());
+  } catch (e) {
+    yield put(addProductFailed(e.message));
+  }
+}
+
+async function editProductBulkAPI(payload) {
+  const resp = await axios.post("products/bulk/edit", payload);
+  return resp.data;
+}
+
+export function* editProductBulkSaga({ payload }) {
+  try {
+    const product = yield call(editProductBulkAPI, payload);
+    yield put(editProductSuccess(product));
+    yield put(getProductRequest());
+  } catch (e) {
+    yield put(editProductFailed(e.message));
+  }
+}
+
+async function editProductAPI({ id, name, sku, price }) {
+  const resp = await axios.post(`products/${id}`, { name, sku, price });
   return resp.data;
 }
 
@@ -74,6 +106,8 @@ export function* getProductSaga() {
 
 export function* watchProductSaga() {
   yield takeEvery(addProductRequest, addProductSaga);
+  yield takeEvery(addProductRequestBulk, addProductBulkSaga);
+  yield takeEvery(editProductBulkRequest, editProductBulkSaga);
   yield takeEvery(getProductRequest, getProductSaga);
   yield takeEvery(editProductRequest, editProductSaga);
   yield takeEvery(deleteProductRequest, deleteProductSaga);

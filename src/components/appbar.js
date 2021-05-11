@@ -52,37 +52,39 @@ export default function HeaderAppBar() {
               </Button>
             </>
           ) : (
-            <Button
-              color="inherit"
-              onClick={() => {
-                removeAccessToken();
-                window.location.reload();
-              }}
-            >
-              Logout
-            </Button>
+            <>
+              <Button
+                color="inherit"
+                onClick={() => {
+                  removeAccessToken();
+                  window.location.reload();
+                }}
+              >
+                Logout
+              </Button>
+              <Button color="inherit" onClick={() => navigate(ROUTES.HOME)}>
+                Home
+              </Button>
+              <Button color="inherit" onClick={() => navigate(ROUTES.PRODUCTS)}>
+                Products
+              </Button>
+              <Button color="inherit" onClick={() => navigate(ROUTES.CATAGORY)}>
+                Catagories
+              </Button>
+              <Button color="inherit" onClick={() => navigate(ROUTES.VENDORS)}>
+                Vendors
+              </Button>
+              <Button color="inherit" onClick={() => navigate(ROUTES.CUSTOMER)}>
+                Customers
+              </Button>
+              <Button color="inherit" onClick={() => navigate(ROUTES.PURCHASE)}>
+                Purchase
+              </Button>
+              <Button color="inherit" onClick={() => navigate(ROUTES.ORDERS)}>
+                Orders
+              </Button>
+            </>
           )}
-          <Button color="inherit" onClick={() => navigate(ROUTES.HOME)}>
-            Home
-          </Button>
-          <Button color="inherit" onClick={() => navigate(ROUTES.PRODUCTS)}>
-            Products
-          </Button>
-          <Button color="inherit" onClick={() => navigate(ROUTES.CATAGORY)}>
-            Catagories
-          </Button>
-          <Button color="inherit" onClick={() => navigate(ROUTES.VENDORS)}>
-            Vendors
-          </Button>
-          <Button color="inherit" onClick={() => navigate(ROUTES.CUSTOMER)}>
-            Customers
-          </Button>
-          <Button color="inherit" onClick={() => navigate(ROUTES.PURCHASE)}>
-            Purchase
-          </Button>
-          <Button color="inherit" onClick={() => navigate(ROUTES.ORDERS)}>
-            Orders
-          </Button>
         </Toolbar>
       </AppBar>
     </div>

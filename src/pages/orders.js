@@ -48,6 +48,7 @@ function createData({
   direction,
   catagory,
   customer,
+  mrp,
 }) {
   return {
     sno,
@@ -58,6 +59,7 @@ function createData({
     direction,
     catagory,
     customer,
+    mrp,
   };
 }
 
@@ -78,36 +80,65 @@ const addComponent = ({
   setQuantity,
 }) => (
   <div>
-    <Autocomplete
-      id="combo-box-demo1"
-      options={productsList}
-      getOptionLabel={(option) => option.name}
-      style={{ width: 300 }}
-      renderInput={(params) => (
-        <TextField {...params} label="Products" variant="outlined" />
-      )}
-      onChange={(_, newValue) => {
-        const p = [...products];
-        p[index] = newValue.id;
-        setProducts(p);
-      }}
-    />
-    <Input
-      placeholder="Enter Price"
-      onChange={(e) => {
-        const p = [...price];
-        p[index] = parseInt(e.target.value);
-        setPrice(p);
-      }}
-    />
-    <Input
-      placeholder="Enter Quantity"
-      onChange={(e) => {
-        const q = [...quantity];
-        q[index] = parseInt(e.target.value);
-        setQuantity(q);
-      }}
-    />
+    <div>
+      <Autocomplete
+        id="combo-box-demo1"
+        options={productsList}
+        getOptionLabel={(option) => option.name}
+        style={{ width: 300 }}
+        renderInput={(params) => (
+          <TextField {...params} label="Products" variant="outlined" />
+        )}
+        onChange={(_, newValue) => {
+          const p = [...products];
+          const s = [...price];
+          p[index] = newValue.id;
+          setProducts(p);
+          s[index] = newValue.sprice;
+          setPrice(s);
+        }}
+      />
+      <div>
+        <Input
+          placeholder="Enter Barcode"
+          onChange={(e) => {
+            const p = [...products];
+            const s = [...price];
+            const found = productsList.filter(
+              (d) => d.sku.toLowerCase() === e.target.value.toLowerCase()
+            );
+            if (found.length <= 0) return;
+            p[index] = found[0].id;
+            setProducts(p);
+            s[index] = found[0].sprice;
+            setPrice(s);
+          }}
+        />
+      </div>
+    </div>
+
+    <div>
+      <Input
+        value={price[index] || 0}
+        // readOnly={true}
+        placeholder="Enter Price"
+        onChange={(e) => {
+          const p = [...price];
+          p[index] = parseInt(e.target.value);
+          setPrice(p);
+        }}
+      />
+    </div>
+    <div>
+      <Input
+        placeholder="Enter Quantity"
+        onChange={(e) => {
+          const q = [...quantity];
+          q[index] = parseInt(e.target.value);
+          setQuantity(q);
+        }}
+      />
+    </div>
   </div>
 );
 
@@ -121,7 +152,7 @@ export default function Order() {
   const productsList = useSelector(productSelector);
   const ordersList = useSelector(orderSelector);
   const customerList = useSelector(customerSelector);
-
+  console.log(price);
   const reset = () => {
     setProducts([]);
     setPrice([]);
@@ -147,6 +178,7 @@ export default function Order() {
             sno: count,
             orderId: ordersList[i].id,
             productName: ordersList[i].transactions[j].product.name,
+            mrp: ordersList[i].transactions[j].product.price,
             price: ordersList[i].transactions[j].price,
             quantity: ordersList[i].transactions[j].quantity,
             direction: ordersList[i].transactions[j].direction,
@@ -167,7 +199,7 @@ export default function Order() {
     <>
       <div>
         <h1>Order</h1>
-        <FormControl>
+        <div>
           {count > 0 && (
             <div>
               <Autocomplete
@@ -182,18 +214,26 @@ export default function Order() {
               />
             </div>
           )}
-          {[...Array(count)].map((_, index) =>
-            addComponent({
-              index,
-              products,
-              setProducts,
-              productsList,
-              setPrice,
-              price,
-              quantity,
-              setQuantity,
-            })
-          )}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {[...Array(count)].map((_, index) =>
+              addComponent({
+                index,
+                products,
+                setProducts,
+                productsList,
+                setPrice,
+                price,
+                quantity,
+                setQuantity,
+              })
+            )}
+          </div>
+
           <Button onClick={() => setCount(count + 1)}>
             {count === 0 ? "Place Order" : "Add More"}
           </Button>
@@ -214,10 +254,14 @@ export default function Order() {
               Submit
             </Button>
           )}
-        </FormControl>
+        </div>
       </div>
       <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="customized table">
+        <Table
+          editable="true"
+          className={classes.table}
+          aria-label="customized table"
+        >
           <TableHead>
             <TableRow>
               <StyledTableCell align="center">S.No</StyledTableCell>
@@ -225,6 +269,7 @@ export default function Order() {
               <StyledTableCell align="center">Product Name</StyledTableCell>
               <StyledTableCell align="center">Catagory</StyledTableCell>
               <StyledTableCell align="center">Price</StyledTableCell>
+              <StyledTableCell align="center">MRP</StyledTableCell>
               <StyledTableCell align="center">Quantity</StyledTableCell>
               <StyledTableCell align="center">Customer Name</StyledTableCell>
               <StyledTableCell align="center">Direction</StyledTableCell>
@@ -240,6 +285,7 @@ export default function Order() {
                 </StyledTableCell>
                 <StyledTableCell align="center">{row.catagory}</StyledTableCell>
                 <StyledTableCell align="center">{row.price}</StyledTableCell>
+                <StyledTableCell align="center">{row.mrp}</StyledTableCell>
                 <StyledTableCell align="center">{row.quantity}</StyledTableCell>
                 <StyledTableCell align="center">{row.customer}</StyledTableCell>
                 <StyledTableCell align="center">

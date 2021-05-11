@@ -50,8 +50,8 @@ export function* getOrderByIdSaga({ payload }) {
   }
 }
 
-async function editOrderAPI({ id, name, SKU, price }) {
-  const resp = await axios.post(`order/${id}`, { name, SKU, price });
+async function editOrderAPI({ id, name, sku, price }) {
+  const resp = await axios.post(`order/${id}`, { name, sku, price });
   return resp.data;
 }
 

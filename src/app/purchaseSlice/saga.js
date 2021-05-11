@@ -30,8 +30,8 @@ export function* addPurchaseSaga({ payload }) {
   }
 }
 
-async function editPurchaseAPI({ id, name, SKU, price }) {
-  const resp = await axios.post(`purchase/${id}`, { name, SKU, price });
+async function editPurchaseAPI({ id, name, sku, price }) {
+  const resp = await axios.post(`purchase/${id}`, { name, sku, price });
   return resp.data;
 }
 

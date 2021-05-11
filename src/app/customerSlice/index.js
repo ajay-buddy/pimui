@@ -4,7 +4,7 @@ const customerSlice = createSlice({
   name: "customerSlice",
   initialState: {
     name: null,
-    SKU: null,
+    sku: null,
     price: null,
     loading: false,
     error: null,

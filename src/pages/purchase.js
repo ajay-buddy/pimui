@@ -75,46 +75,60 @@ const addComponent = ({
   price,
   quantity,
   setQuantity,
-}) => (
-  <div>
+}) => {
+  return (
     <div>
-      <Autocomplete
-        id="combo-box-demo1"
-        options={productsList}
-        getOptionLabel={(option) => option.name}
-        style={{ width: 300 }}
-        renderInput={(params) => (
-          <TextField {...params} label="Products" variant="outlined" />
-        )}
-        onChange={(_, newValue) => {
-          const p = [...products];
-          p[index] = newValue.id;
-          setProducts(p);
-        }}
-      />
+      <div>
+        <Autocomplete
+          id="combo-box-demo1"
+          options={productsList}
+          getOptionLabel={(option) => option.name}
+          style={{ width: 300 }}
+          renderInput={(params) => (
+            <TextField {...params} label="Select Product" variant="outlined" />
+          )}
+          onChange={(_, newValue) => {
+            const p = [...products];
+            p[index] = newValue.id;
+            setProducts(p);
+          }}
+        />
+        <Input
+          placeholder="Enter Barcode"
+          onChange={(e) => {
+            const p = [...products];
+            const found = productsList.filter(
+              (d) => d.sku.toLowerCase() === e.target.value.toLowerCase()
+            );
+            p[index] = found[0].id;
+            console.log(productsList, found, p, products);
+            setProducts(p);
+          }}
+        />
+      </div>
+      <div>
+        <Input
+          placeholder="Enter Price"
+          onChange={(e) => {
+            const p = [...price];
+            p[index] = parseInt(e.target.value);
+            setPrice(p);
+          }}
+        />
+      </div>
+      <div>
+        <Input
+          placeholder="Enter Quantity"
+          onChange={(e) => {
+            const q = [...quantity];
+            q[index] = parseInt(e.target.value);
+            setQuantity(q);
+          }}
+        />
+      </div>
     </div>
-    <div>
-      <Input
-        placeholder="Enter Price"
-        onChange={(e) => {
-          const p = [...price];
-          p[index] = parseInt(e.target.value);
-          setPrice(p);
-        }}
-      />
-    </div>
-    <div>
-      <Input
-        placeholder="Enter Quantity"
-        onChange={(e) => {
-          const q = [...quantity];
-          q[index] = parseInt(e.target.value);
-          setQuantity(q);
-        }}
-      />
-    </div>
-  </div>
-);
+  );
+};
 
 export default function Purchase() {
   const classes = useStyles();
@@ -174,7 +188,7 @@ export default function Purchase() {
         }}
       >
         <h1>Purchase</h1>
-        <FormControl>
+        <div>
           {count > 0 && (
             <div>
               <Autocomplete
@@ -189,18 +203,27 @@ export default function Purchase() {
               />
             </div>
           )}
-          {[...Array(count)].map((_, index) =>
-            addComponent({
-              index,
-              products,
-              setProducts,
-              productsList,
-              setPrice,
-              price,
-              quantity,
-              setQuantity,
-            })
-          )}
+          <hr />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {[...Array(count)].map((_, index) =>
+              addComponent({
+                index,
+                products,
+                setProducts,
+                productsList,
+                setPrice,
+                price,
+                quantity,
+                setQuantity,
+              })
+            )}
+          </div>
+
           <Button onClick={() => setCount(count + 1)}>
             {count === 0 ? "Add Purchase" : "Add More"}
           </Button>
@@ -221,7 +244,7 @@ export default function Purchase() {
               Submit
             </Button>
           )}
-        </FormControl>
+        </div>
       </div>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="customized table">

@@ -7,6 +7,8 @@ import {
   registerSuccess,
   registerFailed,
 } from "./index";
+import history from "../../history";
+import { ROUTES } from "../../routes";
 import axios from "../axios";
 
 async function loginApi({ username, password }) {
@@ -22,6 +24,7 @@ export function* loginSaga({ payload }) {
   try {
     const user = yield call(loginApi, payload);
     yield put(loginSuccess(user?.data));
+    yield window.location.reload();
   } catch (e) {
     yield put(loginFailed(e.message));
   }

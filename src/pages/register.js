@@ -10,13 +10,22 @@ export default function Register() {
   return (
     <div>
       <h1>Register</h1>
-      <FormControl>
+      <div
+        style={{
+          maxWidth: "300px",
+          display: "flex",
+          flexDirection: "column",
+          margin: "auto",
+          justifyContent: "center",
+        }}
+      >
         <Input
           placeholder="Enter a Username"
           onChange={(event) => setUsername(event.target.value)}
         />
         <Input
           placeholder="Enter Password"
+          type="password"
           onChange={(event) => setPassword(event.target.value)}
         />
         <Button
@@ -28,7 +37,7 @@ export default function Register() {
         >
           Register
         </Button>
-      </FormControl>
+      </div>
     </div>
   );
 }
