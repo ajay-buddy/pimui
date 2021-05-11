@@ -48,7 +48,7 @@ export default function SimpleModal({
         placeholder="Select an option"
       />
       <Dropdown
-        disabled={true}
+        // disabled={true}
         options={studyGroupList}
         onChange={({ value }) => setStudyGroup(value)}
         value={studyGroup || clientBinding.study_group}
