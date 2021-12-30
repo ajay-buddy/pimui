@@ -101,7 +101,6 @@ const addComponent = ({
               (d) => d.sku.toLowerCase() === e.target.value.toLowerCase()
             );
             p[index] = found[0].id;
-            console.log(productsList, found, p, products);
             setProducts(p);
           }}
         />

@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { FormControl, Input, Button } from "@material-ui/core";
+import { FormControl, Input, Button, Select, MenuItem } from "@material-ui/core";
 import { registerRequest } from "../app/authSlice";
+
+const USERTYPE = ["ADMIN", "CANDIDATE"]
 
 export default function Register() {
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
+  const [userType, setUserType] = useState(USERTYPE[0]);
   const dispatch = useDispatch();
   return (
     <div>
@@ -28,11 +31,19 @@ export default function Register() {
           type="password"
           onChange={(event) => setPassword(event.target.value)}
         />
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={userType}
+          label="USER TYPE"
+          onChange={({target}) => setUserType(target.value)}
+        >
+          {USERTYPE.map(u => <MenuItem value={u}>{u}</MenuItem>)}
+        </Select>
         <Button
           disabled={!username || !password}
           onClick={() => {
-            console.log(username, password);
-            dispatch(registerRequest({ username, password }));
+            dispatch(registerRequest({ username, password, user_type: userType }));
           }}
         >
           Register

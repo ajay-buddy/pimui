@@ -9,4 +9,10 @@ export const ROUTES = {
   ORDERS: "/orders",
   PURCHASE: "/purchase",
   VENDORS: "/vendors",
+
+  PROFILE: "/profile",
+  CANDIDATESPROFILE: "/profile/:id",
+  CANDIDATES: "/candidates",
+  JOBS: "/jobs",
+  APPLICATIONS: "/applications",
 };

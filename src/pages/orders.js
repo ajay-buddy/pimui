@@ -152,7 +152,6 @@ export default function Order() {
   const productsList = useSelector(productSelector);
   const ordersList = useSelector(orderSelector);
   const customerList = useSelector(customerSelector);
-  console.log(price);
   const reset = () => {
     setProducts([]);
     setPrice([]);

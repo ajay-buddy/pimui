@@ -9,6 +9,7 @@ import customerReducer from "./customerSlice";
 import ordersReducer from "./ordersSlice";
 import purchaseReducer from "./purchaseSlice";
 import vendorsReducer from "./vendorsSlice";
+import profileReducer from "./profileSlice";
 
 const getPersistConfig = (key) => ({
   key,
@@ -23,4 +24,5 @@ export default combineReducers({
   orders: persistReducer(getPersistConfig("orders"), ordersReducer),
   purchases: persistReducer(getPersistConfig("purchase"), purchaseReducer),
   vendors: persistReducer(getPersistConfig("vendors"), vendorsReducer),
+  profile: persistReducer(getPersistConfig("profile"), profileReducer),
 });

@@ -9,6 +9,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import history from "../history";
 import { ROUTES } from "../routes";
 import { accessToken, removeAccessToken } from "../app/utils";
+import Candidates from "../pages/candidates";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const navigate = (route) => history.push(route);
+const navigate = (route) => (window.location.href = route);
 
 export default function HeaderAppBar() {
   const classes = useStyles();
@@ -65,13 +66,25 @@ export default function HeaderAppBar() {
               <Button color="inherit" onClick={() => navigate(ROUTES.HOME)}>
                 Home
               </Button>
-              <Button color="inherit" onClick={() => navigate(ROUTES.PRODUCTS)}>
-                Products
+              <Button color="inherit" onClick={() => navigate(ROUTES.PROFILE)}>
+                Profile
               </Button>
-              <Button color="inherit" onClick={() => navigate(ROUTES.CATAGORY)}>
-                Catagories
+              <Button
+                color="inherit"
+                onClick={() => navigate(ROUTES.APPLICATIONS)}
+              >
+                Applications
               </Button>
-              <Button color="inherit" onClick={() => navigate(ROUTES.VENDORS)}>
+              <Button
+                color="inherit"
+                onClick={() => navigate(ROUTES.CANDIDATES)}
+              >
+                Candidates
+              </Button>
+              <Button color="inherit" onClick={() => navigate(ROUTES.JOBS)}>
+                Jobs
+              </Button>
+              {/* <Button color="inherit" onClick={() => navigate(ROUTES.VENDORS)}>
                 Vendors
               </Button>
               <Button color="inherit" onClick={() => navigate(ROUTES.CUSTOMER)}>
@@ -82,7 +95,7 @@ export default function HeaderAppBar() {
               </Button>
               <Button color="inherit" onClick={() => navigate(ROUTES.ORDERS)}>
                 Orders
-              </Button>
+              </Button> */}
             </>
           )}
         </Toolbar>

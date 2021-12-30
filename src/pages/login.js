@@ -31,7 +31,6 @@ export default function Login() {
         <Button
           disabled={!username || !password}
           onClick={() => {
-            console.log(username, password);
             dispatch(loginRequest({ username, password }));
           }}
         >

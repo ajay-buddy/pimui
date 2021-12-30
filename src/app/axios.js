@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:3000/",
+  baseURL: "http://localhost/",
   headers: {
     "content-type": "application/json",
   },
@@ -19,6 +19,17 @@ instance.interceptors.request.use(
   },
   (error) => {
     Promise.reject(error);
+  }
+);
+
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // console.log(error.status === 401)
+    if (error && error.response && error.response.status === 401) {
+      localStorage.clear();
+      window.location.href = "/";
+    }
   }
 );
 

@@ -14,7 +14,6 @@ function splitIntoChunk(arr, chunk) {
   while (arr.length > 0) {
     let tempArray;
     tempArray = arr.splice(0, chunk);
-    console.log(tempArray);
     arrays.push(tempArray);
   }
   return arrays;
@@ -23,7 +22,6 @@ function splitIntoChunk(arr, chunk) {
 export default function Home() {
   const [data, setData] = useState([]);
   const dispatch = useDispatch();
-  console.log(data);
   useEffect(() => {
     const products = [];
     data.forEach((d, i) => {
@@ -42,7 +40,6 @@ export default function Home() {
       }
     });
     const content = splitIntoChunk(products, 100);
-    console.log("===>", content);
     content.forEach((d) => dispatch(addProductRequestBulk(d)));
     // dispatch(addProductRequestBulk(products));
   }, [data]);

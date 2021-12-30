@@ -17,6 +17,7 @@ async function loginApi({ username, password }) {
     password,
   });
   localStorage.setItem("accessToken", resp.data.accessToken);
+  localStorage.setItem("id", resp.data.id);
   return resp.data;
 }
 
@@ -30,12 +31,8 @@ export function* loginSaga({ payload }) {
   }
 }
 
-async function registerApi({ username, password }) {
-  const resp = await axios.post("auth/signup", {
-    username,
-    password,
-  });
-  localStorage.setItem("accessToken", resp.data.accessToken);
+async function registerApi(data) {
+  const resp = await axios.post("auth/signup", data);
   return resp.data;
 }
 

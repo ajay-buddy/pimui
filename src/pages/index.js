@@ -8,6 +8,10 @@ import Invoice from "./invoice";
 import Orders from "./orders";
 import Purchase from "./purchase";
 import Vendors from "./vendors";
+import Profile from "./profile";
+import Candidates from "./candidates";
+import Jobs from "./jobs";
+import Applications from "./applications";
 
 const COMPONENTS = {
   Login,
@@ -20,6 +24,10 @@ const COMPONENTS = {
   Orders,
   Purchase,
   Vendors,
+  Profile,
+  Candidates,
+  Jobs,
+  Applications,
 };
 
 export default COMPONENTS;

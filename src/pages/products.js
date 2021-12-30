@@ -82,14 +82,12 @@ const CustomTableCell = ({
   const classes = useStyles();
   const [value, setValue] = useState(data[k]);
   const isEditMode = editing[index];
-  console.log("****", value);
   return (
     <StyledTableCell key={data.id} align="center">
       {isEditMode ? (
         <Input
           value={value}
           onChange={(e) => {
-            console.log("====");
             e.preventDefault();
             let d = [...editingData];
             if (d[index]) {
@@ -109,7 +107,6 @@ const CustomTableCell = ({
   );
 };
 export default function Products() {
-  console.log("===>Hello");
   const classes = useStyles();
   const [adding, setAdding] = useState(false);
   const [name, setName] = useState("");
@@ -146,7 +143,6 @@ export default function Products() {
         item.status
       )
     );
-  console.log("---->", editingData);
   return (
     <>
       <div>Products</div>
