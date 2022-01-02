@@ -25,6 +25,7 @@ const profileSlice = createSlice({
       active: null,
       engaged: null,
     },
+    tag: {},
     profileCount: 0,
     userProfiles: [],
     experiences: [],
@@ -36,6 +37,11 @@ const profileSlice = createSlice({
     jobCount: 0,
     applications: [],
     applicationCount: 0,
+    candidateProfiles: [],
+    adminProfiles: [],
+    candidateProfileCount: 0,
+    adminProfileCount: 0,
+    autoCompleteData: [],
   },
   reducers: {
     addProfileRequest: (state, action) => {
@@ -70,6 +76,31 @@ const profileSlice = createSlice({
     getAllProfileFailed: (state, action) => {
       state.loading = false;
     },
+
+    getCandidateProfileRequest: (state, action) => {
+      state.loading = true;
+    },
+    getCandidateProfileSuccess: (state, action) => {
+      state.candidateProfiles = [...action.payload[0]];
+      state.candidateProfileCount = action.payload[1];
+      state.loading = false;
+    },
+    getCandidateProfileFailed: (state, action) => {
+      state.loading = false;
+    },
+
+    getAdminProfileRequest: (state, action) => {
+      state.loading = true;
+    },
+    getAdminProfileSuccess: (state, action) => {
+      state.adminProfiles = [...action.payload[0]];
+      state.adminProfileCount = action.payload[1];
+      state.loading = false;
+    },
+    getAdminProfileFailed: (state, action) => {
+      state.loading = false;
+    },
+
     editProfileRequest: (state, action) => {
       state.loading = true;
     },
@@ -113,6 +144,7 @@ const profileSlice = createSlice({
     },
     addTagSuccess: (state, action) => {
       state.loading = false;
+      state.tag = action.payload;
     },
     addTagFailed: (state, action) => {
       state.loading = false;
@@ -220,22 +252,47 @@ const profileSlice = createSlice({
     getImageUrlFailed: (state, action) => {
       state.loading = false;
     },
+
+    getAutoCompleteSearchRequest: (state, action) => {
+      state.loading = true;
+    },
+    getAutoCompleteSearchSuccess: (state, action) => {
+      state.loading = false;
+      state.autoCompleteData = action.payload;
+    },
+    getAutoCompleteSearchFailed: (state, action) => {
+      state.loading = false;
+    },
+    resetAutoCompleteSearch: (state, action) => {
+      state.autoCompleteData = [];
+    },
   },
 });
 
 export const profileSelector = (state) => state.profile.profile;
 export const allProfileSelector = (state) => state.profile.userProfiles;
+export const candidateProfileSelector = (state) =>
+  state.profile.candidateProfiles;
+export const adminProfileSelector = (state) => state.profile.adminProfiles;
 export const profileCountSelector = (state) => state.profile.profileCount;
+export const candidateProfileCountSelector = (state) =>
+  state.profile.candidateProfileCount;
+export const adminProfileCountSelector = (state) =>
+  state.profile.adminProfileCount;
 export const getExperienceSelector = (state) => state.profile.experiences;
 export const getProjectSelector = (state) => state.profile.projects;
 export const getEducationSelector = (state) => state.profile.educations;
 export const getTagSelector = (state) => state.profile.tags;
+export const addTagSelector = (state) => state.profile.tag;
 export const getUploadImageSelector = (state) => state.profile.imageUrl;
 export const getJobSelector = (state) => state.profile.jobs;
 export const jobCountSelector = (state) => state.profile.jobCount;
 export const getApplicationSelector = (state) => state.profile.applications;
 export const applicationCountSelector = (state) =>
   state.profile.applicationCount;
+
+export const autoCompleteDataSelector = (state) =>
+  state.profile.autoCompleteData;
 
 export const {
   getImageUrlRequest,
@@ -288,9 +345,24 @@ export const {
   getProfileRequest,
   getProfileSuccess,
   getProfileFailed,
+
   getAllProfileRequest,
   getAllProfileSuccess,
   getAllProfileFailed,
+
+  getCandidateProfileRequest,
+  getCandidateProfileSuccess,
+  getCandidateProfileFailed,
+
+  getAdminProfileRequest,
+  getAdminProfileSuccess,
+  getAdminProfileFailed,
+
+  getAutoCompleteSearchRequest,
+  getAutoCompleteSearchSuccess,
+  getAutoCompleteSearchFailed,
+  resetAutoCompleteSearch,
+
   editProfileRequest,
   editProfileSuccess,
   editProfileFailed,

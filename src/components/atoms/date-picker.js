@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import MobileDatePicker from "@mui/lab/MobileDatePicker";
+import TextField from "@material-ui/core/TextField";
 import Error from "./error";
 
 const Wrapper = styled.div``;
@@ -18,16 +20,24 @@ export default function DatePicker({
 }) {
   return (
     <Wrapper>
-      <div>{label && <Label>{label}</Label>}</div>
+      {/* <div>{label && <Label>{label}</Label>}</div> */}
       <div>
-        <InputArea
+        <MobileDatePicker
+          label={label}
+          inputFormat="MM/dd/yyyy"
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          renderInput={(params) => <TextField {...params} />}
+        />
+        {/* <InputArea
           name={name}
           value={value}
           type={type || "date"}
           onChange={onChange}
           placeholder={placeholder || ""}
           disabled={disabled}
-        ></InputArea>
+        ></InputArea> */}
       </div>
       {errors && errors.length > 0 && <Error messages={errors} />}
     </Wrapper>

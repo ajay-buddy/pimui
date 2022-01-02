@@ -48,6 +48,15 @@ import {
   getApplicationRequest,
   getApplicationSuccess,
   getApplicationFailed,
+  getCandidateProfileRequest,
+  getCandidateProfileSuccess,
+  getCandidateProfileFailed,
+  getAdminProfileRequest,
+  getAdminProfileSuccess,
+  getAdminProfileFailed,
+  getAutoCompleteSearchRequest,
+  getAutoCompleteSearchSuccess,
+  getAutoCompleteSearchFailed,
 } from "./index";
 import axios from "../axios";
 
@@ -81,6 +90,36 @@ export function* getAllProfileSaga(payload) {
     yield put(getAllProfileSuccess(profile));
   } catch (e) {
     yield put(getAllProfileFailed(e.message));
+  }
+}
+
+async function getCandidateProfileAPI({ payload }) {
+  const resp = await axios.get(
+    `profile/candidate${payload || "?page=1&limit=10"}`
+  );
+  return resp.data;
+}
+
+export function* getCandidateProfileSaga(payload) {
+  try {
+    const profile = yield call(getCandidateProfileAPI, payload);
+    yield put(getCandidateProfileSuccess(profile));
+  } catch (e) {
+    yield put(getCandidateProfileFailed(e.message));
+  }
+}
+
+async function getAdminProfileAPI({ payload }) {
+  const resp = await axios.get(`profile/admin${payload || "?page=1&limit=10"}`);
+  return resp.data;
+}
+
+export function* getAdminProfileSaga(payload) {
+  try {
+    const profile = yield call(getAdminProfileAPI, payload);
+    yield put(getAdminProfileSuccess(profile));
+  } catch (e) {
+    yield put(getAdminProfileFailed(e.message));
   }
 }
 
@@ -301,10 +340,48 @@ export function* getApplicationSaga(payload) {
   }
 }
 
+async function getAutoCompleteSearchAPI({ payload }) {
+  let url = "";
+  const addFilter = () => {
+    let filter = "";
+    const { filterData } = payload;
+    for (let i = 0; i < filterData.length; i++) {
+      filter += `${filterData[i].key}=${filterData[i].value}`;
+      if (i < filterData.length - 1) {
+        filter += "&";
+      }
+    }
+    return filter;
+  };
+  switch (payload.type) {
+    case "ADMIN-SEARCH": {
+      url = `profile/admin?${addFilter()}`;
+      const resp = await axios.get(url);
+      return resp.data[0];
+    }
+    case "TAG-SEARCH": {
+      url = `tag/find?${addFilter()}`;
+      const resp = await axios.get(url);
+      return resp.data;
+    }
+  }
+}
+
+export function* getAutoCompleteSearchSaga(payload) {
+  try {
+    const data = yield call(getAutoCompleteSearchAPI, payload);
+    yield put(getAutoCompleteSearchSuccess(data));
+  } catch (e) {
+    yield put(getAutoCompleteSearchFailed(e.message));
+  }
+}
+
 export function* watchProfileSaga() {
   yield takeEvery(getProfileRequest, getMyProfileSaga);
   yield takeEvery(addProfileRequest, addMyProfileSaga);
   yield takeEvery(getAllProfileRequest, getAllProfileSaga);
+  yield takeEvery(getCandidateProfileRequest, getCandidateProfileSaga);
+  yield takeEvery(getAdminProfileRequest, getAdminProfileSaga);
   yield takeEvery(addExperienceRequest, addExperienceSaga);
   yield takeEvery(getExperienceRequest, getExperienceSaga);
   yield takeEvery(addProjectRequest, addProjectSaga);
@@ -319,4 +396,5 @@ export function* watchProfileSaga() {
   yield takeEvery(addApplicationRequest, addApplicationSaga);
   yield takeEvery(getApplicationRequest, getApplicationSaga);
   yield takeEvery(getImageUrlRequest, getImageUrlSaga);
+  yield takeEvery(getAutoCompleteSearchRequest, getAutoCompleteSearchSaga);
 }

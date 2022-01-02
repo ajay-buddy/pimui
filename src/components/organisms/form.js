@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 
 import { Button } from "@material-ui/core";
@@ -9,6 +10,9 @@ import RadioBox from "../atoms/radio-box";
 import TextBox from "../atoms/text-box";
 import Validate from "../../validations/validation";
 import RadioBoxBuilder from "../atoms/radio-box-builder";
+import { addTagRequest, addTagSelector } from "../../app/profileSlice";
+import AutoSelect from "../atoms/autoselect";
+import { TrendingUpRounded } from "@material-ui/icons";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -50,6 +54,8 @@ export default function Form(props) {
   } = props;
 
   const [errors, setErrors] = useState([]);
+  const tagSelector = useSelector(addTagSelector);
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -71,6 +77,7 @@ export default function Form(props) {
     onSubmit(formValues);
   };
   if (!show) return null;
+
   return (
     <Wrapper>
       <ContentWrapper show={show}>
@@ -90,6 +97,24 @@ export default function Form(props) {
                   }
                   onChange(data);
                 },
+              };
+              const buildTagConfig = () => {
+                return {
+                  value: values[config.key],
+                  getlable: (opt) => opt?.name,
+                  label: "Tags",
+                  createApi: (value) =>
+                    dispatch(addTagRequest({ name: value })),
+                  listner: tagSelector,
+                  searchConfig: { type: "TAG-SEARCH", key: "name" },
+                  onChange: (value) => {
+                    const data = { ...values };
+                    data[config.key] = value;
+                    onChange(data);
+                  },
+                  multiple: true,
+                  variant: "outlined",
+                };
               };
               const objBuilder = {
                 value: values[config.key],
@@ -119,9 +144,7 @@ export default function Form(props) {
                 case "DATEFEILD":
                   return <DatePicker {...config} {...obj} errors={err} />;
                 case "RADIO-BUILD-OPTION":
-                  return (
-                    <RadioBoxBuilder {...config} {...objBuilder} errors={err} />
-                  );
+                  return <AutoSelect {...buildTagConfig()} errors={err} />;
               }
             })}
           <Button onClick={onClose}>CANCEL</Button>

@@ -13,6 +13,7 @@ export const ROUTES = {
   PROFILE: "/profile",
   CANDIDATESPROFILE: "/profile/:id",
   CANDIDATES: "/candidates",
+  ADMINS: "/admins",
   JOBS: "/jobs",
   APPLICATIONS: "/applications",
 };

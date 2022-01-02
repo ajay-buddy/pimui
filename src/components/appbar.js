@@ -9,7 +9,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import history from "../history";
 import { ROUTES } from "../routes";
 import { accessToken, removeAccessToken } from "../app/utils";
-import Candidates from "../pages/candidates";
+import Candidates from "../pages/admin";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -80,6 +80,9 @@ export default function HeaderAppBar() {
                 onClick={() => navigate(ROUTES.CANDIDATES)}
               >
                 Candidates
+              </Button>
+              <Button color="inherit" onClick={() => navigate(ROUTES.ADMINS)}>
+                Admins
               </Button>
               <Button color="inherit" onClick={() => navigate(ROUTES.JOBS)}>
                 Jobs

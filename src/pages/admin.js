@@ -8,6 +8,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
   Button,
   FormControl,
@@ -16,11 +18,16 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import {
+  adminProfileSelector,
   allProfileSelector,
+  getAdminProfileRequest,
   getAllProfileRequest,
-  getCandidateProfileRequest,
-  candidateProfileSelector,
-  candidateProfileCountSelector,
+  adminProfileCountSelector,
+  getAutoCompleteSearchRequest,
+  resetAutoCompleteSearch,
+  autoCompleteDataSelector,
+  addTagRequest,
+  addTagSelector,
 } from "../app/profileSlice";
 import { registerRequest } from "../app/authSlice";
 
@@ -32,6 +39,7 @@ import history from "../history";
 import Datatable from "../components/atoms/datatable";
 import { getDefaultNormalizer } from "@testing-library/react";
 import Paginate from "../components/molecules/paginate";
+import AutoSelect from "../components/atoms/autoselect";
 const useStyles = makeStyles({
   table: {
     minWidth: 700,
@@ -40,8 +48,11 @@ const useStyles = makeStyles({
 const USERTYPE = ["ADMIN", "CANDIDATE"];
 export default function Admins() {
   const classes = useStyles();
-  const profileData = useSelector(candidateProfileSelector);
-  const totalCount = useSelector(candidateProfileCountSelector);
+  const profileData = useSelector(adminProfileSelector);
+  const autoCompleteData = useSelector(autoCompleteDataSelector);
+  const tagSelector = useSelector(addTagSelector);
+
+  const totalCount = useSelector(adminProfileCountSelector);
   const [adding, setAdding] = useState(false);
 
   const [username, setUsername] = useState(null);
@@ -52,25 +63,30 @@ export default function Admins() {
 
   useEffect(() => {
     const { search } = history.location;
-    dispatch(getCandidateProfileRequest(search));
+    dispatch(getAdminProfileRequest(search));
   }, []);
 
   const header = [
     { label: "S.No", key: "sno" },
     { label: "Name", key: "name" },
     { label: "Email", key: "email" },
-    { label: "Actve", key: "active" },
+    { label: "ID", key: "id" },
+    { label: "Manager", key: "manager" },
   ];
   const createData = () => {
-    return profileData.map((profile, index) => ({
-      sno: index + 1,
-      name: `${profile.first_name || ""} ${profile.last_name || ""}`,
-      email: profile.email,
-      active: profile.active ? "Yes" : "No",
-      actions: {
-        onRowClick: () => history.push(`/profile/${profile.id}`),
-      },
-    }));
+    return profileData.map((profile, index) => {
+      return {
+        sno: index + 1,
+        name: `${profile.first_name || ""} ${profile.last_name || ""}`,
+        email: profile.email,
+        active: profile.active ? "Yes" : "No",
+        id: profile?.belongs_to?.id || "",
+        manager: profile?.belongs_to?.manager?.username || "",
+        actions: {
+          // onRowClick: () => history.push(`/profile/${profile.id}`),
+        },
+      };
+    });
   };
   return (
     <>
@@ -143,6 +159,76 @@ export default function Admins() {
       <Form />
       {/* <CandidateList profileData={profileData} /> */}
       <Paginate total={totalCount} />
+      {/* <Autocomplete
+        id="combo-box-demo1"
+        options={autoCompleteData}
+        getOptionLabel={(option) => option?.email}
+        style={{ width: 300 }}
+        renderInput={(params) => (
+          <TextField {...params} label="Products" variant="outlined" />
+        )}
+        onInputChange={(e) => {
+          if (e.target.value.length < 3) return;
+          dispatch(
+            getAutoCompleteSearchRequest({
+              type: "ADMIN-SEARCH",
+              filterData: [
+                {
+                  key: "email",
+                  value: e.target.value,
+                },
+              ],
+            })
+          );
+        }}
+        onChange={(_, newValue) => console.log(newValue)}
+      /> */}
+      {/* <AutoSelect
+        getlable={(opt) => opt.name}
+        label={"Tags"}
+        createApi={(value) => dispatch(addTagRequest({ name: value }))}
+        listner={tagSelector}
+        searchApi={(value) =>
+          dispatch(
+            getAutoCompleteSearchRequest({
+              type: "TAG-SEARCH",
+              filterData: [
+                {
+                  key: "name",
+                  value: value,
+                },
+              ],
+            })
+          )
+        }
+        onChange={(value) => console.log("%%%%%", value)}
+        multiple={false}
+        variant={"outlined"}
+      /> */}
+
+      {/* <AutoSelect
+        getlable={(opt) => opt.name}
+        label={"Tags"}
+        createApi={(value) => dispatch(addTagRequest({ name: value }))}
+        listner={tagSelector}
+        searchConfig={{ type: "TAG-SEARCH", key: "name" }}
+        searchApi={(value) =>
+          dispatch(
+            getAutoCompleteSearchRequest({
+              type: "TAG-SEARCH",
+              filterData: [
+                {
+                  key: "name",
+                  value: value,
+                },
+              ],
+            })
+          )
+        }
+        onChange={(value) => console.log("%%%%%", value)}
+        multiple={false}
+        variant={"outlined"}
+      /> */}
     </>
   );
 }

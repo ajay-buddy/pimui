@@ -87,6 +87,11 @@ function App() {
               exact
             />
             <PrivateRoute
+              component={COMPONENTS.Admins}
+              path={ROUTES.ADMINS}
+              exact
+            />
+            <PrivateRoute
               component={COMPONENTS.Jobs}
               path={ROUTES.JOBS}
               exact

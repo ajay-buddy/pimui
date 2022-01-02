@@ -154,7 +154,6 @@ export default function Profile(props) {
         {
           type: "REQUIRED",
           message: "This Feild is Required",
-          message: "This Feild is Required",
         },
       ],
     },
@@ -421,6 +420,12 @@ export default function Profile(props) {
       feildType: "RADIO-BUILD-OPTION",
       builder: tagData,
       placeholder: "Enter Profile Tags",
+      validations: [
+        {
+          type: "REQUIRED",
+          message: "This Feild is Required",
+        },
+      ],
     },
   ];
 

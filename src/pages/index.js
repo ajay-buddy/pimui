@@ -12,6 +12,7 @@ import Profile from "./profile";
 import Candidates from "./candidates";
 import Jobs from "./jobs";
 import Applications from "./applications";
+import Admins from "./admin";
 
 const COMPONENTS = {
   Login,
@@ -28,6 +29,7 @@ const COMPONENTS = {
   Candidates,
   Jobs,
   Applications,
+  Admins,
 };
 
 export default COMPONENTS;

@@ -7,6 +7,8 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
 `;
 const PageNumber = styled.a`
   color: black;
