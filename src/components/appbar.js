@@ -9,7 +9,6 @@ import MenuIcon from "@material-ui/icons/Menu";
 import history from "../history";
 import { ROUTES } from "../routes";
 import { accessToken, removeAccessToken } from "../app/utils";
-import Candidates from "../pages/admin";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,26 +65,27 @@ export default function HeaderAppBar() {
               <Button color="inherit" onClick={() => navigate(ROUTES.HOME)}>
                 Home
               </Button>
-              <Button color="inherit" onClick={() => navigate(ROUTES.PROFILE)}>
-                Profile
-              </Button>
-              <Button
-                color="inherit"
-                onClick={() => navigate(ROUTES.APPLICATIONS)}
-              >
-                Applications
-              </Button>
               <Button
                 color="inherit"
                 onClick={() => navigate(ROUTES.CANDIDATES)}
               >
                 Candidates
               </Button>
-              <Button color="inherit" onClick={() => navigate(ROUTES.ADMINS)}>
+              <Button color="inherit" onClick={() => navigate(ROUTES.ADMIN)}>
                 Admins
               </Button>
-              <Button color="inherit" onClick={() => navigate(ROUTES.JOBS)}>
-                Jobs
+
+              <Button color="inherit" onClick={() => navigate(ROUTES.SPOCS)}>
+                Spoc
+              </Button>
+              <Button color="inherit" onClick={() => navigate(ROUTES.JOB)}>
+                Job
+              </Button>
+              <Button
+                color="inherit"
+                onClick={() => navigate(ROUTES.APPLICATIONS)}
+              >
+                Applications
               </Button>
               {/* <Button color="inherit" onClick={() => navigate(ROUTES.VENDORS)}>
                 Vendors

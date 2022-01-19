@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { ROUTES } from "../../routes";
-import history from "../../history";
+import { useHistory } from "react-router-dom";
+import qs from "query-string";
 
 const Wrapper = styled.div`
   display: flex;
@@ -22,47 +22,83 @@ const PageNumber = styled.a`
   }
 `;
 
-const LIMIT = 10;
-export default function Paginate({ total }) {
-  const t = Math.ceil(parseInt(total) / LIMIT);
-  const { search } = history.location;
-  const arr = new Array(t).fill("");
-  const getPage = () => {
-    if (search) {
-      const temp = search.split("page=")[1];
-      if (temp) {
-        return parseInt(temp.split("&")[0]) || 1;
-      }
-    }
-    return 1;
-  };
-  const currentPage = getPage();
+export default function Paginate({ total, updateFunction }) {
+  const history = useHistory();
+  const [prevDots, setPrevDots] = useState(false);
+  const [nextDots, setNextDots] = useState(false);
+  const query = qs.parse(history.location.search);
+
+  const limit = 10;
+  const pages = Math.ceil(parseInt(total || 0) / limit);
+  const arr = new Array(pages).fill("");
+
+  let current = (query && query.page) || 0;
+  current = parseInt(current);
   return (
     <Wrapper>
-      {currentPage > 1 && (
+      {current > 0 && (
         <PageNumber
-          href={`${history.location.pathname}?page=${
-            currentPage - 1
-          }&limit=${LIMIT}`}
+          onClick={() => {
+            const q = qs.stringify({
+              ...query,
+              ...{ page: current - 1, limit },
+            });
+            history.push({
+              search: q,
+            });
+            updateFunction("?" + q);
+          }}
         >
-          &laquo;
+          &laquo; Prev
         </PageNumber>
       )}
-      {arr.map((_, i) => (
+      {current > 0 && prevDots && <PageNumber>...</PageNumber>}
+      {arr.map((_, index) => {
+        if (index < current - 3) {
+          if (!prevDots) {
+            setPrevDots(true);
+          }
+          return null;
+        }
+        if (index > current + 3) {
+          if (!nextDots) {
+            setNextDots(true);
+          }
+          return null;
+        }
+        return (
+          <PageNumber
+            active={index + 1 === current}
+            onClick={() => {
+              const q = qs.stringify({
+                ...query,
+                ...{ page: index + 1, limit },
+              });
+              history.push({
+                search: q,
+              });
+              updateFunction("?" + q);
+            }}
+          >
+            {index + 1}
+          </PageNumber>
+        );
+      })}
+      {current <= pages && nextDots && <PageNumber>...</PageNumber>}
+      {current <= pages && (
         <PageNumber
-          href={`${history.location.pathname}?page=${i + 1}&limit=${LIMIT}`}
+          onClick={() => {
+            const q = qs.stringify({
+              ...query,
+              ...{ page: current + 1, limit },
+            });
+            history.push({
+              search: q,
+            });
+            updateFunction("?" + q);
+          }}
         >
-          {i + 1}
-        </PageNumber>
-      ))}
-
-      {currentPage < t && (
-        <PageNumber
-          href={`${history.location.pathname}?page=${
-            currentPage + 1
-          }&limit=${LIMIT}`}
-        >
-          &raquo;
+          &raquo; Next
         </PageNumber>
       )}
     </Wrapper>

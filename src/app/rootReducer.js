@@ -3,13 +3,14 @@ import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import authReducer from "./authSlice";
-import catagoryReducer from "./catagorySlice";
-import productsReducer from "./productsSlice";
-import customerReducer from "./customerSlice";
-import ordersReducer from "./ordersSlice";
-import purchaseReducer from "./purchaseSlice";
-import vendorsReducer from "./vendorsSlice";
 import profileReducer from "./profileSlice";
+import tagReducer from "./tagSlice";
+import spocReducer from "./spocSlice";
+import companyReducer from "./companySlice";
+import jobReducer from "./jobSlice";
+import applicationReducer from "./applicationSlice";
+import actionReducer from "./actionSlice";
+import DashboardReducer from "./dashboardSlice";
 
 const getPersistConfig = (key) => ({
   key,
@@ -18,11 +19,15 @@ const getPersistConfig = (key) => ({
 
 export default combineReducers({
   auth: persistReducer(getPersistConfig("auth"), authReducer),
-  catagories: persistReducer(getPersistConfig("catagory"), catagoryReducer),
-  products: persistReducer(getPersistConfig("products"), productsReducer),
-  customers: persistReducer(getPersistConfig("customer"), customerReducer),
-  orders: persistReducer(getPersistConfig("orders"), ordersReducer),
-  purchases: persistReducer(getPersistConfig("purchase"), purchaseReducer),
-  vendors: persistReducer(getPersistConfig("vendors"), vendorsReducer),
   profile: persistReducer(getPersistConfig("profile"), profileReducer),
+  tag: persistReducer(getPersistConfig("tag"), tagReducer),
+  spoc: persistReducer(getPersistConfig("spoc"), spocReducer),
+  job: persistReducer(getPersistConfig("job"), jobReducer),
+  action: persistReducer(getPersistConfig("action"), actionReducer),
+  dashboard: persistReducer(getPersistConfig("dashboard"), DashboardReducer),
+  company: persistReducer(getPersistConfig("company"), companyReducer),
+  application: persistReducer(
+    getPersistConfig("application"),
+    applicationReducer
+  ),
 });

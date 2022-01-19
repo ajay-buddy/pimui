@@ -3,9 +3,13 @@ import {
   loginRequest,
   loginSuccess,
   loginFailed,
+  bulkRegisterRequest,
+  bulkRegisterSuccess,
   registerRequest,
   registerSuccess,
   registerFailed,
+  getProfileUrlRequest,
+  getProfileUrlSuccess,
 } from "./index";
 import history from "../../history";
 import { ROUTES } from "../../routes";
@@ -39,13 +43,41 @@ async function registerApi(data) {
 export function* registerSaga({ payload }) {
   try {
     const user = yield call(registerApi, payload);
-    yield put(registerSuccess(user?.data));
+    yield put(registerSuccess(user));
   } catch (e) {
     yield put(registerFailed(e.message));
   }
 }
 
+async function registerBulkApi(data) {
+  const resp = await axios.post("auth/signup/bulk", data);
+  return resp.data;
+}
+
+export function* registerBulkSaga({ payload }) {
+  try {
+    const user = yield call(registerBulkApi, payload);
+    yield put(bulkRegisterSuccess(user));
+  } catch (e) {
+    yield put(registerFailed(e.message));
+  }
+}
+
+async function getProfileUrlApi({ payload }) {
+  const resp = await axios.post("auth/upload", payload);
+  return resp.data;
+}
+
+export function* getProfileUrlSaga(payload) {
+  try {
+    const user = yield call(getProfileUrlApi, payload);
+    yield put(getProfileUrlSuccess(user));
+  } catch (e) {}
+}
+
 export function* watchAuthSaga() {
   yield takeEvery(loginRequest, loginSaga);
   yield takeEvery(registerRequest, registerSaga);
+  yield takeEvery(bulkRegisterRequest, registerBulkSaga);
+  yield takeEvery(getProfileUrlRequest, getProfileUrlSaga);
 }

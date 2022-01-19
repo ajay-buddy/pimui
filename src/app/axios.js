@@ -25,7 +25,6 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
-    // console.log(error.status === 401)
     if (error && error.response && error.response.status === 401) {
       localStorage.clear();
       window.location.href = "/";

@@ -1,54 +1,55 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { FormControl, Input, Button, Select, MenuItem } from "@material-ui/core";
+import { useDispatch } from "react-redux";
+import { Form, Button } from "react-bootstrap";
 import { registerRequest } from "../app/authSlice";
-
-const USERTYPE = ["ADMIN", "CANDIDATE"]
-
+import { TYPE } from "../constants";
 export default function Register() {
-  const [username, setUsername] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [userType, setUserType] = useState(USERTYPE[0]);
   const dispatch = useDispatch();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   return (
-    <div>
-      <h1>Register</h1>
-      <div
-        style={{
-          maxWidth: "300px",
-          display: "flex",
-          flexDirection: "column",
-          margin: "auto",
-          justifyContent: "center",
+    <Form>
+      <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Label>Email address</Form.Label>
+        <Form.Control
+          type="email"
+          placeholder="Enter email"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <Form.Text className="text-muted">
+          We'll never share your email with anyone else.
+        </Form.Text>
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Label>Password</Form.Label>
+        <Form.Control
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="formBasicCheckbox">
+        <Form.Check type="checkbox" label="Check me out" />
+      </Form.Group>
+      <Button
+        variant="primary"
+        type="submit"
+        onClick={(e) => {
+          e.preventDefault();
+          dispatch(
+            registerRequest({
+              username,
+              password,
+              user_type: TYPE.ADMIN,
+            })
+          );
         }}
       >
-        <Input
-          placeholder="Enter a Username"
-          onChange={(event) => setUsername(event.target.value)}
-        />
-        <Input
-          placeholder="Enter Password"
-          type="password"
-          onChange={(event) => setPassword(event.target.value)}
-        />
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={userType}
-          label="USER TYPE"
-          onChange={({target}) => setUserType(target.value)}
-        >
-          {USERTYPE.map(u => <MenuItem value={u}>{u}</MenuItem>)}
-        </Select>
-        <Button
-          disabled={!username || !password}
-          onClick={() => {
-            dispatch(registerRequest({ username, password, user_type: userType }));
-          }}
-        >
-          Register
-        </Button>
-      </div>
-    </div>
+        Submit
+      </Button>
+    </Form>
   );
 }

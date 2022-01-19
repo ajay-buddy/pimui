@@ -7,8 +7,26 @@ const authSlice = createSlice({
     isAuthenticated: false,
     loading: false,
     error: null,
+    uploadedProfileSuccess: [],
+    uploadedProfileFailed: [],
+    profileUpdateUrl: "",
   },
   reducers: {
+    getProfileUrlRequest: (state, action) => {
+      state.loading = true;
+    },
+    getProfileUrlSuccess: (state, action) => {
+      state.profileUpdateUrl = action?.payload;
+    },
+    bulkRegisterRequest: (state, action) => {
+      state.loading = true;
+      state.uploadedProfileSuccess = [];
+      state.uploadedProfileFailed = [];
+    },
+    bulkRegisterSuccess: (state, action) => {
+      state.loading = true;
+      console.log("====Action ", action);
+    },
     loginRequest: (state, action) => {
       state.loading = true;
     },
@@ -24,22 +42,31 @@ const authSlice = createSlice({
       state.loading = true;
     },
     registerSuccess: (state, action) => {
-      state.username = action.payload;
+      state.username = action.payload?.username;
       state.isAuthenticated = true;
       state.loading = false;
     },
     registerFailed: (state, action) => {
       state.loading = false;
     },
+    logoutRequest: (state, action) => {
+      state.isAuthenticated = false;
+    },
   },
 });
 
-export const authSelector = (state) => state.authSlice.authenticated;
+export const authSelector = (state) => state?.auth?.isAuthenticated;
+export const registerSelector = (state) => state?.auth?.username;
+export const profileUrlSelector = (state) => state.auth?.profileUpdateUrl;
 
 export const {
+  getProfileUrlRequest,
+  getProfileUrlSuccess,
   loginRequest,
   loginSuccess,
   loginFailed,
+  bulkRegisterRequest,
+  bulkRegisterSuccess,
   registerRequest,
   registerSuccess,
   registerFailed,

@@ -1,35 +1,21 @@
-import Login from "./login";
-import Register from "./register";
 import Home from "./home";
-import Products from "./products";
-import Catagory from "./catagory";
-import Customer from "./customer";
-import Invoice from "./invoice";
-import Orders from "./orders";
-import Purchase from "./purchase";
-import Vendors from "./vendors";
-import Profile from "./profile";
+import Login from "./login";
 import Candidates from "./candidates";
-import Jobs from "./jobs";
-import Applications from "./applications";
-import Admins from "./admin";
+import Admin from "./admin";
+import Register from "./register";
+import Spoc from "./spoc";
+import Job from "./job";
+import Application from "./applications";
 
-const COMPONENTS = {
-  Login,
-  Register,
-  Home,
-  Products,
-  Catagory,
-  Customer,
-  Invoice,
-  Orders,
-  Purchase,
-  Vendors,
-  Profile,
-  Candidates,
-  Jobs,
-  Applications,
-  Admins,
+const COMPNENTS = {
+  HOME: Home,
+  LOGIN: Login,
+  REGISTER: Register,
+  CANDIDATES: Candidates,
+  ADMIN: Admin,
+  SPOC: Spoc,
+  JOB: Job,
+  APPLICATION: Application,
 };
 
-export default COMPONENTS;
+export default COMPNENTS;
