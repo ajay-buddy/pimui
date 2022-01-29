@@ -37,7 +37,6 @@ export default function Admin() {
   const [edit, setEditing] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
-  console.log(userData);
 
   const createTag = (value) => {
     dispatch(tagCreateRequest(value));
@@ -81,8 +80,8 @@ export default function Admin() {
         <FileUploader
           readFunction={async (data, filename) => {
             const result = readAdmin(data, filename);
-            console.log(result);
-            result.forEach((d) => dispatch(bulkRegisterRequest(d)));
+            dispatch(dispatch(bulkRegisterRequest(result)));
+            // result.forEach((d) => dispatch(bulkRegisterRequest(result)));
             // dispatch(bulkRegisterRequest(result));
           }}
         />
@@ -123,6 +122,7 @@ export default function Admin() {
             if (edit) {
               return dispatch(profileCreateRequest({ ...data }));
             }
+            data.user_type = TYPE.ADMIN;
 
             return dispatch(
               registerRequest({
@@ -149,7 +149,6 @@ export default function Admin() {
       <Paginate
         total={profileTotal || 0}
         updateFunction={(q) => {
-          console.log(q);
           dispatch(profileListRequest({ type: TYPE.ADMIN, query: q }));
         }}
       />

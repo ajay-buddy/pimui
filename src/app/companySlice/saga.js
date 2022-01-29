@@ -37,7 +37,6 @@ async function companyDeleteApi(data) {
 export function* companyDeleteSaga({ payload }) {
   try {
     const user = yield call(companyDeleteApi, payload);
-    console.log(user);
     yield put(companyListRequest());
   } catch (e) {
     yield put(companyError(e.message));
@@ -52,7 +51,6 @@ async function companyCreateApi(data) {
 export function* companyCreateSaga({ payload }) {
   try {
     const user = yield call(companyCreateApi, payload);
-    console.log(user);
     yield put(companyListRequest());
   } catch (e) {
     yield put(companyError(e.message));

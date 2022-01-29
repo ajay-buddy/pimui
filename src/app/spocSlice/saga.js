@@ -37,7 +37,6 @@ async function spocDeleteApi(data) {
 export function* spocDeleteSaga({ payload }) {
   try {
     const user = yield call(spocDeleteApi, payload);
-    console.log(user);
     yield put(spocListRequest());
   } catch (e) {
     yield put(spocError(e.message));
@@ -52,7 +51,6 @@ async function spocCreateApi(data) {
 export function* spocCreateSaga({ payload }) {
   try {
     const user = yield call(spocCreateApi, payload);
-    console.log(user);
     yield put(spocListRequest());
   } catch (e) {
     yield put(spocError(e.message));

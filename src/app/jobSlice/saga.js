@@ -45,7 +45,6 @@ async function jobDeleteApi(data) {
 export function* jobDeleteSaga({ payload }) {
   try {
     const user = yield call(jobDeleteApi, payload);
-    console.log(user);
     yield put(jobListRequest());
   } catch (e) {
     yield put(jobError(e.message));
@@ -60,7 +59,6 @@ async function jobCreateApi(data) {
 export function* jobCreateSaga({ payload }) {
   try {
     const user = yield call(jobCreateApi, payload);
-    console.log(user);
     yield put(jobListRequest());
   } catch (e) {
     yield put(jobError(e.message));

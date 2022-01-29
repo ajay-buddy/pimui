@@ -34,6 +34,7 @@ import { spocListSelector } from "../app/spocSlice/index";
 import { jobHeaders } from "../constants/headers/job.headers";
 import {
   bulkJobRequest,
+  jobBulkUploadSelector,
   jobCreateRequest,
   jobDeleteRequest,
   jobListRequest,
@@ -48,6 +49,7 @@ import FileUploader from "../components/molecules/file-importer";
 import { readJob } from "../utills/bulk-file-reader/job";
 import Paginate from "../components/molecules/paginate";
 import { useHistory } from "react-router-dom";
+import { jobBulkHeaders } from "../constants/headers/job-bulk.headers";
 
 export default function Job() {
   const [bulUpload, setBulkUpload] = useState(false);
@@ -56,6 +58,11 @@ export default function Job() {
   const jobSerach = useSelector(jobSearchListSelector);
   const tagList = useSelector(tagListSelector);
   const companyList = useSelector(companyListSelector);
+  const { success, failed } = useSelector(jobBulkUploadSelector);
+  const [showProgress, setShowProgress] = useState({
+    success: false,
+    failed: false,
+  });
 
   const [filtering, setFiltering] = useState(false);
   const [filterData, setFilterData] = useState({});
@@ -110,13 +117,52 @@ export default function Job() {
       >
         Bulk Create Jobs
       </Button>
+      {success && success.length > 0 && (
+        <Button
+          variant="Primary"
+          onClick={() => {
+            setShowProgress({ success: true, failed: false });
+          }}
+        >
+          {`Successfully Uploaded: ${success.length} Records`}
+        </Button>
+      )}
+      {failed && failed.length > 0 && (
+        <Button
+          variant="Primary"
+          onClick={() => {
+            setShowProgress({ success: false, failed: true });
+          }}
+        >
+          {`Failed to Upload: ${failed.length} Records`}
+        </Button>
+      )}
       {bulUpload && (
         <FileUploader
           readFunction={async (data, filename) => {
             const result = readJob(data, filename);
-            console.log(result);
             result.forEach((d) => dispatch(bulkJobRequest(d)));
             // dispatch(bulkRegisterRequest(result));
+          }}
+        />
+      )}
+      {showProgress.success && success && success.length > 0 && (
+        <ListView
+          headers={jobBulkHeaders}
+          list={success}
+          onEdit={(data) => {
+            setEditing(true);
+            setUserData({ ...data });
+          }}
+        />
+      )}
+      {showProgress.failed && failed && failed.length > 0 && (
+        <ListView
+          headers={jobBulkHeaders}
+          list={failed}
+          onEdit={(data) => {
+            setEditing(true);
+            setUserData({ ...data });
           }}
         />
       )}
@@ -133,7 +179,6 @@ export default function Job() {
           value={filterData}
           onSubmit={() => {
             const data = { ...filterData };
-            console.log(data);
             const updated = {
               ...data,
               ...{
@@ -249,7 +294,6 @@ export default function Job() {
       <Paginate
         total={jobListTotal || 0}
         updateFunction={(q) => {
-          console.log(q);
           dispatch(jobListRequest({ query: q }));
         }}
       />

@@ -10,9 +10,11 @@ export function readAdmin(data, fileInfo) {
       name: d[0].trim(),
       email: d[1].trim(),
       emp_code: d[2].trim(),
+      status: d[3].trim(),
+      user_type: TYPE.ADMIN,
     },
   }));
 
-  const chunked = chunks(updated, 100);
+  const chunked = chunks(updated, 10);
   return chunked;
 }

@@ -34,7 +34,6 @@ async function actionDeleteApi(data) {
 export function* actionDeleteSaga({ payload }) {
   try {
     const user = yield call(actionDeleteApi, payload);
-    console.log(user);
     yield put(actionListRequest());
   } catch (e) {
     yield put(actionError(e.message));
@@ -49,7 +48,6 @@ async function actionCreateApi(data) {
 export function* actionCreateSaga({ payload }) {
   try {
     const user = yield call(actionCreateApi, payload);
-    console.log(user);
     yield put(actionListRequest());
   } catch (e) {
     yield put(actionError(e.message));

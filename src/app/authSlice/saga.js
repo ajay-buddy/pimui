@@ -50,8 +50,24 @@ export function* registerSaga({ payload }) {
 }
 
 async function registerBulkApi(data) {
-  const resp = await axios.post("auth/signup/bulk", data);
-  return resp.data;
+  if (Array.isArray(data) && data[0] && Array.isArray(data[0])) {
+    const resp = {
+      success: [],
+      failed: [],
+    };
+    for (let i = 0; i < data.length; i++) {
+      const result = await axios.post("auth/signup/bulk", data[i]);
+
+      resp.success.concat(result.data.success);
+      resp.failed.concat(result.data.failed);
+      return resp;
+    }
+
+    return resp;
+  } else {
+    const resp = await axios.post("auth/signup/bulk", data);
+    return resp.data;
+  }
 }
 
 export function* registerBulkSaga({ payload }) {

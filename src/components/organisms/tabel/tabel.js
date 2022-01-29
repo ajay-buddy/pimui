@@ -11,27 +11,30 @@ export default function ListView({
   type,
 }) {
   return (
-    <>
-      {
-        <table>
-          <tr>
-            {headers.map((d) => (
-              <th>{d.label}</th>
-            ))}
-            {onView && <th>View</th>}
-            {onEdit && <th>Edit</th>}
-            {onDelete && <th>Delete</th>}
-          </tr>
-          {list?.map((d) => (
-            <tr>
-              {headers.map((h) => getTableRow(h, d))}
-              {onView && <td onClick={() => onView(d)}>View</td>}
-              {onEdit && <td onClick={() => onEdit(d)}>Edit</td>}
-              {onDelete && <td onClick={() => onDelete(d.id)}>Delete</td>}
-            </tr>
+    <div
+      style={{
+        display: "flex",
+        overflow: "scroll",
+      }}
+    >
+      <table>
+        <tr>
+          {headers.map((d) => (
+            <th>{d.label}</th>
           ))}
-        </table>
-      }
-    </>
+          {onView && <th>View</th>}
+          {onEdit && <th>Edit</th>}
+          {/* {onDelete && <th>Delete</th>} */}
+        </tr>
+        {list?.map((d) => (
+          <tr>
+            {headers.map((h) => getTableRow(h, d))}
+            {onView && <td onClick={() => onView(d)}>View</td>}
+            {onEdit && <td onClick={() => onEdit(d)}>Edit</td>}
+            {/* {onDelete && <td onClick={() => onDelete(d.id)}>Delete</td>} */}
+          </tr>
+        ))}
+      </table>
+    </div>
   );
 }

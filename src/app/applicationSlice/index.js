@@ -16,7 +16,11 @@ const applicationSlice = createSlice({
     },
     bulkApplicationSuccess: (state, action) => {
       state.loading = true;
-      console.log("====Action ", action);
+      state.uploadedApplicationSuccess =
+        state.uploadedApplicationSuccess.concat(action?.payload?.success);
+      state.uploadedApplicationFailed = state.uploadedApplicationFailed.concat(
+        action?.payload?.failed
+      );
     },
     applicationDeleteRequest: (state, action) => {
       state.loading = true;
@@ -47,6 +51,10 @@ const applicationSlice = createSlice({
 export const applicationListSelector = (state) =>
   state?.application?.applicationList;
 export const applicationSelector = (state) => state?.application?.application;
+export const applicationBulkUploadSelector = (state) => ({
+  success: state?.application?.uploadedApplicationSuccess,
+  failed: state?.application?.uploadedApplicationFailed,
+});
 
 export const {
   bulkApplicationRequest,

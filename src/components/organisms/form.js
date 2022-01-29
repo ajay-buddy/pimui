@@ -16,11 +16,10 @@ const getFeild = ({
   onChange,
   key,
 }) => {
-  if (type === FIELD_TYPE.DATE) {
-    console.log(value, key);
-    // value[key] = new Date(value[key]);
-    // value[key] = value[key]?.toLocaleDateString();
-  }
+  // if (type === FIELD_TYPE.DATE) {
+  //   // value[key] = new Date(value[key]);
+  //   // value[key] = value[key]?.toLocaleDateString();
+  // }
   return (
     <Form.Group className="mb-3" controlId="formBasicEmail">
       {label && <Form.Label>{label}</Form.Label>}
@@ -69,6 +68,7 @@ const getButton = ({
 };
 
 const renderFeild = ({
+  getLable,
   downloadKey,
   contentAllowed,
   onFileUpload,
@@ -107,6 +107,7 @@ const renderFeild = ({
           {label && <Form.Label>{label}</Form.Label>}
           <AutoSelect
             {...{
+              getLable,
               label,
               type,
               placeholder,
@@ -131,6 +132,7 @@ const renderFeild = ({
           {label && <Form.Label>{label}</Form.Label>}
           <AutoSelectSingle
             {...{
+              getLable,
               label,
               type,
               placeholder,

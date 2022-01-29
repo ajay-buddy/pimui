@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import qs from "query-string";
-import { profileCreateRequest, profileListRequest } from "../app/profileSlice";
+import {
+  profileCreateRequest,
+  profileListRequest,
+  profileBulkCreateRequest,
+  profileBulkUploadSelector,
+} from "../app/profileSlice";
 import { TYPE } from "../constants";
 import {
   profileListSelector,
@@ -34,12 +39,18 @@ import { readCandidates } from "../utills/bulk-file-reader/candidates";
 import { useHistory } from "react-router-dom";
 import Paginate from "../components/molecules/paginate";
 import axios from "axios";
+import { candidateBulkHeaders } from "../constants/headers/candidates-bulk.headers";
 
 export default function Candidates() {
   const [bulUpload, setBulkUpload] = useState(false);
   const [profileList, profileTotal] = useSelector(profileListSelector);
   const tagList = useSelector(tagListSelector);
   const [managerList, managerListTotal] = useSelector(profileListSelector);
+  const { success, failed } = useSelector(profileBulkUploadSelector);
+  const [showProgress, setShowProgress] = useState({
+    success: false,
+    failed: false,
+  });
   const [fileData, setFileDate] = useState(null);
   const resumeUploadUrl = useSelector(profileUrlSelector);
   const history = useHistory();
@@ -61,7 +72,6 @@ export default function Candidates() {
   const dispatch = useDispatch();
 
   useEffect(async () => {
-    console.log("****", resumeUploadUrl);
     if (resumeUploadUrl && fileData) {
       try {
         const resp = await axios({
@@ -73,7 +83,6 @@ export default function Candidates() {
           },
           onUploadProgress: (e) => console.log("==>", e),
         });
-        console.log("--->", resp);
       } catch (e) {
         console.log(e, e.message);
       }
@@ -119,13 +128,52 @@ export default function Candidates() {
       >
         Bulk Create Candidate
       </Button>
+      {success && success.length > 0 && (
+        <Button
+          variant="Primary"
+          onClick={() => {
+            setShowProgress({ success: true, failed: false });
+          }}
+        >
+          {`Successfully Uploaded: ${success.length} Records`}
+        </Button>
+      )}
+      {failed && failed.length > 0 && (
+        <Button
+          variant="Primary"
+          onClick={() => {
+            setShowProgress({ success: false, failed: true });
+          }}
+        >
+          {`Failed to Upload: ${failed.length} Records`}
+        </Button>
+      )}
       {bulUpload && (
         <FileUploader
           readFunction={async (data, filename) => {
             const result = readCandidates(data, filename);
-            console.log(result);
-            result.forEach((d) => dispatch(bulkRegisterRequest(d)));
+            result.forEach((d) => dispatch(profileBulkCreateRequest(d)));
             // dispatch(bulkRegisterRequest(result));
+          }}
+        />
+      )}
+      {showProgress.success && success && success.length > 0 && (
+        <ListView
+          headers={candidateBulkHeaders}
+          list={success}
+          onEdit={(data) => {
+            setEditing(true);
+            setUserData({ ...data });
+          }}
+        />
+      )}
+      {showProgress.failed && failed && failed.length > 0 && (
+        <ListView
+          headers={candidateBulkHeaders}
+          list={failed}
+          onEdit={(data) => {
+            setEditing(true);
+            setUserData({ ...data });
           }}
         />
       )}
@@ -165,19 +213,13 @@ export default function Candidates() {
                 data.manager = data.manager.value;
               }
             }
+            data.user_type = TYPE.CANDIDATE;
 
             if (edit) {
               return dispatch(profileCreateRequest({ ...data }));
             }
 
-            return dispatch(
-              registerRequest({
-                username: data.email,
-                password: "%^VB^^ggY&b",
-                user_type: TYPE.CANDIDATE,
-                profile: { ...data },
-              })
-            );
+            return dispatch(profileCreateRequest({ ...data }));
 
             // dispatch(profileCreateRequest(data));
           }}
@@ -190,7 +232,6 @@ export default function Candidates() {
           value={filterData}
           onSubmit={() => {
             const data = { ...filterData };
-            console.log(data);
             const updated = {
               ...data,
               ...{
@@ -236,7 +277,6 @@ export default function Candidates() {
               }
               query += `phone=${updated.phone}`;
             }
-            console.log(updated);
             if (updated.c_location) {
               if (query.length > 1) {
                 query += "&";
@@ -328,7 +368,6 @@ export default function Candidates() {
       <Paginate
         total={profileTotal || 0}
         updateFunction={(q) => {
-          console.log(q);
           dispatch(profileListRequest({ type: TYPE.CANDIDATE, query: q }));
         }}
       />

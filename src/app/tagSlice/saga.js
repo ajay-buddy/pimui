@@ -13,7 +13,6 @@ import { ROUTES } from "../../routes";
 import axios from "../axios";
 
 async function tagCreateApi(name) {
-  console.log(name);
   const resp = await axios.post(`tag/create/`, { name });
   return resp.data;
 }
@@ -21,7 +20,6 @@ async function tagCreateApi(name) {
 export function* tagCreateSaga({ payload }) {
   try {
     const user = yield call(tagCreateApi, payload);
-    console.log(user, payload);
     yield put(tagListRequest(payload.name));
   } catch (e) {
     yield put(tagError(e.message));

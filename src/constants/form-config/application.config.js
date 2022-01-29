@@ -17,6 +17,7 @@ export const ApplicationFormConfig = ({
       options: candidateList,
       getList: getCandidate,
       labelKey: "name",
+      getLable: (data) => `${data.name} ${data.email} ${data.phone}`,
     },
     {
       label: "Job",
@@ -25,6 +26,7 @@ export const ApplicationFormConfig = ({
       options: jobList,
       getList: getJob,
       labelKey: "name",
+      getLable: (data) => `${data.name} ${data.req_id}`,
     },
     {
       label: "Status",
@@ -34,5 +36,41 @@ export const ApplicationFormConfig = ({
       getList: getAction,
       labelKey: "name",
     },
+  ],
+});
+
+export const ApplicationFilterFormConfig = () => ({
+  name: "Application Filter",
+  config: [
+    {
+      label: "Candidate Name",
+      key: "applicant_name",
+      type: FIELD_TYPE.INPUT,
+    },
+    {
+      label: "Email",
+      key: "applicant_email",
+      type: FIELD_TYPE.INPUT,
+    },
+    {
+      label: "Phone",
+      key: "applicant_phone",
+      type: FIELD_TYPE.INPUT,
+    },
+    {
+      label: "Req Id",
+      key: "job_req_id",
+      type: FIELD_TYPE.INPUT,
+    },
+    {
+      label: "Spoc Name",
+      key: "job_spoc_name",
+      type: FIELD_TYPE.INPUT,
+    },
+    // {
+    //   label: "Company Name",
+    //   key: "job_company_name",
+    //   type: FIELD_TYPE.INPUT,
+    // },
   ],
 });

@@ -20,8 +20,7 @@ const dashboardSlice = createSlice({
   },
 });
 
-export const myProfileSelector = (state) =>
-  console.log(state) || state?.dashboard?.myProfile;
+export const myProfileSelector = (state) => state?.dashboard?.myProfile;
 
 export const { getMyProfileRequest, getMyProfileSuccess, dashboardError } =
   dashboardSlice.actions;

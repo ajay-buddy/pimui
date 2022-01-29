@@ -12,12 +12,15 @@ const jobSlice = createSlice({
   reducers: {
     bulkJobRequest: (state, action) => {
       state.loading = true;
-      state.uploadedJobSuccess = [];
-      state.uploadedJobFailed = [];
     },
     bulkJobSuccess: (state, action) => {
       state.loading = true;
-      console.log("====Action ", action);
+      state.uploadedJobSuccess = state.uploadedJobSuccess.concat(
+        action?.payload?.success
+      );
+      state.uploadedJobFailed = state.uploadedJobFailed.concat(
+        action?.payload?.failed
+      );
     },
     jobDeleteRequest: (state, action) => {
       state.loading = true;
@@ -55,6 +58,10 @@ const jobSlice = createSlice({
 export const jobListSelector = (state) => state?.job?.jobList;
 export const jobSearchListSelector = (state) => state?.job?.jobListSearch;
 export const jobSelector = (state) => state?.job?.job;
+export const jobBulkUploadSelector = (state) => ({
+  success: state?.job?.uploadedJobSuccess,
+  failed: state?.job?.uploadedJobFailed,
+});
 
 export const {
   bulkJobRequest,

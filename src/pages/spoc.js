@@ -35,6 +35,7 @@ import {
 } from "../app/companySlice/index";
 import {
   bulkSpocRequest,
+  spocBulkUploadSelector,
   spocCreateRequest,
   spocDeleteRequest,
   spocListRequest,
@@ -44,6 +45,7 @@ import { readSpoc } from "../utills/bulk-file-reader/spoc";
 import FileUploader from "../components/molecules/file-importer/index";
 import Paginate from "../components/molecules/paginate";
 import { useHistory } from "react-router-dom";
+import { spocBulkHeaders } from "../constants/headers/spoc-bulk.headers";
 
 export default function Spoc() {
   const [bulUpload, setBulkUpload] = useState(false);
@@ -51,13 +53,17 @@ export default function Spoc() {
   const tagList = useSelector(tagListSelector);
   const companyList = useSelector(companyListSelector);
   const recruiterList = useSelector(managerProfileListSelector);
-
+  const { success, failed } = useSelector(spocBulkUploadSelector);
   const [filtering, setFiltering] = useState(false);
   const [filterData, setFilterData] = useState({});
 
   const [userData, setUserData] = useState({});
   const [add, setAdding] = useState(false);
   const [edit, setEditing] = useState(false);
+  const [showProgress, setShowProgress] = useState({
+    success: false,
+    failed: false,
+  });
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -105,13 +111,52 @@ export default function Spoc() {
       >
         Bulk Create Spoc
       </Button>
+      {success && success.length > 0 && (
+        <Button
+          variant="Primary"
+          onClick={() => {
+            setShowProgress({ success: true, failed: false });
+          }}
+        >
+          {`Successfully Uploaded: ${success.length} Records`}
+        </Button>
+      )}
+      {failed && failed.length > 0 && (
+        <Button
+          variant="Primary"
+          onClick={() => {
+            setShowProgress({ success: false, failed: true });
+          }}
+        >
+          {`Failed to Upload: ${failed.length} Records`}
+        </Button>
+      )}
       {bulUpload && (
         <FileUploader
           readFunction={async (data, filename) => {
             const result = readSpoc(data, filename);
-            console.log(result);
             result.forEach((d) => dispatch(bulkSpocRequest(d)));
             // dispatch(bulkRegisterRequest(result));
+          }}
+        />
+      )}
+      {showProgress.success && success && success.length > 0 && (
+        <ListView
+          headers={spocBulkHeaders}
+          list={success}
+          onEdit={(data) => {
+            setEditing(true);
+            setUserData({ ...data });
+          }}
+        />
+      )}
+      {showProgress.failed && failed && failed.length > 0 && (
+        <ListView
+          headers={spocBulkHeaders}
+          list={failed}
+          onEdit={(data) => {
+            setEditing(true);
+            setUserData({ ...data });
           }}
         />
       )}
@@ -128,7 +173,6 @@ export default function Spoc() {
           value={filterData}
           onSubmit={() => {
             const data = { ...filterData };
-            console.log(data);
             const updated = {
               ...data,
               ...{
@@ -242,7 +286,6 @@ export default function Spoc() {
       <Paginate
         total={spocListTotal || 0}
         updateFunction={(q) => {
-          console.log(q);
           dispatch(spocListRequest({ query: q }));
         }}
       />

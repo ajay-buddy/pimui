@@ -24,8 +24,9 @@ export const candidateHeaders = [
     key: "profile_tags",
     joinkey: "name",
   },
+
   {
-    label: "Skills",
+    label: "Resume",
     key: "resumeUrl",
     type: "Download",
   },

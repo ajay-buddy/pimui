@@ -25,15 +25,10 @@ export default function AutoSelectSingle(props) {
     }
 
     return {
-      label: value[props.labelKey],
+      label: props.getLable ? props.getLable(value) : value[props.labelKey],
       value: value,
     };
   };
-  console.log(
-    "===",
-    props.value[props.findKey],
-    getValueFromProps(props.value[props.findKey])
-  );
   return (
     <CreatableSelect
       onInputChange={(value) => {
@@ -42,7 +37,7 @@ export default function AutoSelectSingle(props) {
       value={getValueFromProps(props.value[props.findKey])}
       onChange={handleChange}
       options={props.options?.map((d) => ({
-        label: d[props.labelKey],
+        label: props.getLable ? props.getLable(d) : d[props.labelKey],
         value: d,
       }))}
     />

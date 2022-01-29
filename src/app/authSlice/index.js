@@ -25,7 +25,6 @@ const authSlice = createSlice({
     },
     bulkRegisterSuccess: (state, action) => {
       state.loading = true;
-      console.log("====Action ", action);
     },
     loginRequest: (state, action) => {
       state.loading = true;

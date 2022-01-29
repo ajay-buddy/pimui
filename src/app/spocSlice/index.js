@@ -19,11 +19,15 @@ const spocSlice = createSlice({
     },
     bulkSpocRequest: (state, action) => {
       state.loading = true;
-      state.uploadedSpocSuccess = [];
-      state.uploadedSpocFailed = [];
     },
     bulkSpocSuccess: (state, action) => {
       state.loading = true;
+      state.uploadedSpocFailed = state.uploadedSpocFailed.concat(
+        action?.payload?.failed
+      );
+      state.uploadedSpocSuccess = state.uploadedSpocSuccess.concat(
+        action?.payload?.success
+      );
     },
     spocDeleteRequest: (state, action) => {
       state.loading = true;
@@ -54,6 +58,10 @@ const spocSlice = createSlice({
 export const spocListSelector = (state) => state?.spoc?.spocList;
 export const spocListSearchSelector = (state) => state?.spoc?.spocListSearch;
 export const spocSelector = (state) => state?.spoc?.spoc;
+export const spocBulkUploadSelector = (state) => ({
+  success: state?.spoc?.uploadedSpocSuccess,
+  failed: state?.spoc?.uploadedSpocFailed,
+});
 
 export const {
   bulkSpocRequest,

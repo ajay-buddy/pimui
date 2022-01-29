@@ -9,6 +9,8 @@ import {
   profileError,
   managerProfileListRequest,
   managerProfileListSuccess,
+  profileBulkCreateRequest,
+  profileBulkCreateSuccess,
 } from "./index";
 import history from "../../history";
 import { ROUTES } from "../../routes";
@@ -75,9 +77,25 @@ export function* profileCreateSaga({ payload }) {
   }
 }
 
+async function profileBulkCreateApi(data) {
+  const resp = await axios.post(`profile/create/bulk`, data);
+  return resp.data;
+}
+
+export function* profileBulkCreateSaga({ payload }) {
+  try {
+    const user = yield call(profileBulkCreateApi, payload);
+    yield put(profileBulkCreateSuccess(user));
+    // yield put(profileListRequest());
+  } catch (e) {
+    yield put(profileError(e.message));
+  }
+}
+
 export function* watchProfileSaga() {
   yield takeEvery(profileListRequest, profileListSaga);
   yield takeEvery(managerProfileListRequest, managerProfileListSaga);
   yield takeEvery(profileDeleteRequest, profileDeleteSaga);
   yield takeEvery(profileCreateRequest, profileCreateSaga);
+  yield takeEvery(profileBulkCreateRequest, profileBulkCreateSaga);
 }

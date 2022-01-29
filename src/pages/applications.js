@@ -46,8 +46,12 @@ import {
   jobSearchListSelector,
 } from "../app/jobSlice/index";
 import { JobFormConfig } from "../constants/form-config/job.config";
-import { ApplicationFormConfig } from "../constants/form-config/application.config";
 import {
+  ApplicationFilterFormConfig,
+  ApplicationFormConfig,
+} from "../constants/form-config/application.config";
+import {
+  applicationBulkUploadSelector,
   applicationCreateRequest,
   applicationDeleteRequest,
   applicationListRequest,
@@ -65,6 +69,7 @@ import { useHistory } from "react-router-dom";
 import FileUploader from "../components/molecules/file-importer";
 import { readApplication } from "../utills/bulk-file-reader/application";
 import { Modal } from "bootstrap";
+import { applicationBulkHeaders } from "../constants/headers/application-bulk.headers";
 
 export default function Application() {
   const [bulUpload, setBulkUpload] = useState(false);
@@ -72,11 +77,18 @@ export default function Application() {
   const [applicationList, applicationListTotal] = useSelector(
     applicationListSelector
   );
+  const { success, failed } = useSelector(applicationBulkUploadSelector);
+  const [showProgress, setShowProgress] = useState({
+    success: false,
+    failed: false,
+  });
   const actionList = useSelector(actionListSelector);
   const candidateList = useSelector(managerProfileListSelector);
   const jobList = useSelector(jobSearchListSelector);
   const tagList = useSelector(tagListSelector);
   const companyList = useSelector(companyListSelector);
+  const [filtering, setFiltering] = useState(false);
+  const [filterData, setFilterData] = useState({});
 
   const [userData, setUserData] = useState({});
   const [add, setAdding] = useState(false);
@@ -116,7 +128,6 @@ export default function Application() {
   };
 
   const getCandidate = (value) => {
-    console.log("--->+++");
     dispatch(managerProfileListRequest({ type: TYPE.CANDIDATE, value }));
   };
 
@@ -132,6 +143,9 @@ export default function Application() {
       <Button variant="Primary" onClick={() => setAdding(!add)}>
         Create Application
       </Button>
+      <Button variant="Primary" onClick={() => setFiltering(!filtering)}>
+        Filter Candidate
+      </Button>
       <Button
         variant="Primary"
         onClick={() => {
@@ -140,11 +154,30 @@ export default function Application() {
       >
         Bulk Create Applications
       </Button>
+      {success && success.length > 0 && (
+        <Button
+          variant="Primary"
+          onClick={() => {
+            setShowProgress({ success: true, failed: false });
+          }}
+        >
+          {`Successfully Uploaded: ${success.length} Records`}
+        </Button>
+      )}
+      {failed && failed.length > 0 && (
+        <Button
+          variant="Primary"
+          onClick={() => {
+            setShowProgress({ success: false, failed: true });
+          }}
+        >
+          {`Failed to Upload: ${failed.length} Records`}
+        </Button>
+      )}
       {bulUpload && (
         <FileUploader
           readFunction={async (data, filename) => {
             const result = readApplication(data, filename);
-            console.log(result);
             result.forEach((d) => dispatch(bulkApplicationRequest(d)));
           }}
         />
@@ -159,6 +192,86 @@ export default function Application() {
         >
           Close Detail View
         </Button>
+      )}
+      {showProgress.success && success && success.length > 0 && (
+        <ListView
+          headers={applicationBulkHeaders}
+          list={success}
+          onEdit={(data) => {
+            setEditing(true);
+            setUserData({ ...data });
+          }}
+        />
+      )}
+      {showProgress.failed && failed && failed.length > 0 && (
+        <ListView
+          headers={applicationBulkHeaders}
+          list={failed}
+          onEdit={(data) => {
+            setEditing(true);
+            setUserData({ ...data });
+          }}
+        />
+      )}
+      {filtering && (
+        <CustomForm
+          {...ApplicationFilterFormConfig()}
+          onChange={setFilterData}
+          value={filterData}
+          onSubmit={() => {
+            const data = { ...filterData };
+            const updated = {
+              ...data,
+            };
+            let query = "?";
+            if (updated.applicant_name) {
+              if (query.length > 1) {
+                query += "&";
+              }
+              query += `applicant_name=${updated.applicant_name}`;
+            }
+            if (updated.applicant_email) {
+              if (query.length > 1) {
+                query += "&";
+              }
+              query += `applicant_email=${updated.applicant_email}`;
+            }
+            if (updated.applicant_phone) {
+              if (query.length > 1) {
+                query += "&";
+              }
+              query += `applicant_phone=${updated.applicant_phone}`;
+            }
+            if (updated.job_req_id) {
+              if (query.length > 1) {
+                query += "&";
+              }
+              query += `job_req_id=${updated.job_req_id}`;
+            }
+
+            if (updated.job_spoc_name) {
+              if (query.length > 1) {
+                query += "&";
+              }
+              query += `job_spoc_name=${updated.job_spoc_name}`;
+            }
+            if (updated.job_company_name) {
+              if (query.length > 1) {
+                query += "&";
+              }
+              query += `job_company_name=${updated.job_company_name}`;
+            }
+
+            history.push({
+              search: query,
+            });
+            dispatch(
+              applicationListRequest({
+                query,
+              })
+            );
+          }}
+        />
       )}
       {(edit || add) && (
         <CustomForm

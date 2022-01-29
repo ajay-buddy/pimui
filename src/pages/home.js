@@ -8,10 +8,10 @@ import {
 export default function Home() {
   const myProfile = useSelector(myProfileSelector);
   const dispatch = useDispatch();
-  console.log(myProfile);
 
   useEffect(() => {
     dispatch(getMyProfileRequest());
   }, []);
+
   return <div>Dashboard</div>;
 }
