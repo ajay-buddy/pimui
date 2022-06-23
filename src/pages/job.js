@@ -40,6 +40,7 @@ import {
   jobListRequest,
   jobListSelector,
   jobSearchListSelector,
+  jobRequestSuccessSelector,
 } from "../app/jobSlice/index";
 import {
   JobFilterConfig,
@@ -50,6 +51,7 @@ import { readJob } from "../utills/bulk-file-reader/job";
 import Paginate from "../components/molecules/paginate";
 import { useHistory } from "react-router-dom";
 import { jobBulkHeaders } from "../constants/headers/job-bulk.headers";
+import { PAGELIMIT } from "../routes";
 
 export default function Job() {
   const [bulUpload, setBulkUpload] = useState(false);
@@ -58,6 +60,7 @@ export default function Job() {
   const jobSerach = useSelector(jobSearchListSelector);
   const tagList = useSelector(tagListSelector);
   const companyList = useSelector(companyListSelector);
+  const addStatus = useSelector(jobRequestSuccessSelector)
   const { success, failed } = useSelector(jobBulkUploadSelector);
   const [showProgress, setShowProgress] = useState({
     success: false,
@@ -72,7 +75,12 @@ export default function Job() {
   const [edit, setEditing] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
-
+  
+  useEffect(() => {
+    setUserData({})
+    setAdding(false)
+    setEditing(false)
+  }, [addStatus])
   const createTag = (value) => {
     dispatch(tagCreateRequest(value));
   };
@@ -103,10 +111,17 @@ export default function Job() {
   }, []);
   return (
     <div>
-      <Button variant="Primary" onClick={() => setAdding(!add)}>
+      <Button variant="Primary" onClick={() => {
+        setEditing(false)
+        setUserData({})
+        setFiltering(false)
+        setAdding(!add)}}>
         Create Job
       </Button>
-      <Button variant="Primary" onClick={() => setFiltering(!filtering)}>
+      <Button variant="Primary" onClick={() => {
+        setEditing(false)
+        setAdding(false)
+        setFiltering(!filtering)}}>
         Filter Jobs
       </Button>
       <Button
@@ -117,6 +132,10 @@ export default function Job() {
       >
         Bulk Create Jobs
       </Button>
+      <a
+        download={true}
+        href={`${process.env.S3URL}/Job - Sheet1.csv`}
+      >Download Sample File</a>
       {success && success.length > 0 && (
         <Button
           variant="Primary"
@@ -161,6 +180,7 @@ export default function Job() {
           headers={jobBulkHeaders}
           list={failed}
           onEdit={(data) => {
+            setAdding(false)
             setEditing(true);
             setUserData({ ...data });
           }}
@@ -242,7 +262,10 @@ export default function Job() {
             //   }
             //   query += `name=${updated.name}`;
             // }
-
+            if (query.length > 1) {
+              query += "&";
+            }
+            query += `page=1&limit=${PAGELIMIT}`
             history.push({
               search: query,
             });

@@ -57,12 +57,15 @@ async function registerBulkApi(data) {
     };
     for (let i = 0; i < data.length; i++) {
       const result = await axios.post("auth/signup/bulk", data[i]);
-
-      resp.success.concat(result.data.success);
-      resp.failed.concat(result.data.failed);
-      return resp;
+      if (result.data) {
+        if (result.data.success && result.data.success.length > 0) {
+          resp.success = [...resp.success, ...result?.data?.success]
+        }
+        if (result.data.failed && result.data.failed.length > 0) {
+          resp.failed = [...resp.failed, ...result?.data?.failed]
+        }
+      }
     }
-
     return resp;
   } else {
     const resp = await axios.post("auth/signup/bulk", data);
@@ -71,6 +74,7 @@ async function registerBulkApi(data) {
 }
 
 export function* registerBulkSaga({ payload }) {
+
   try {
     const user = yield call(registerBulkApi, payload);
     yield put(bulkRegisterSuccess(user));
@@ -88,7 +92,7 @@ export function* getProfileUrlSaga(payload) {
   try {
     const user = yield call(getProfileUrlApi, payload);
     yield put(getProfileUrlSuccess(user));
-  } catch (e) {}
+  } catch (e) { }
 }
 
 export function* watchAuthSaga() {

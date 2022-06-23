@@ -57,7 +57,7 @@ import {
   applicationListRequest,
   bulkApplicationRequest,
 } from "../app/applicationSlice";
-import { applicationListSelector } from "../app/applicationSlice/index";
+import { applicationListSelector, applicationRequestSuccessSelector } from "../app/applicationSlice/index";
 import { applicationHeaders } from "../constants/headers/application.headers";
 import {
   actionListSelector,
@@ -70,6 +70,7 @@ import FileUploader from "../components/molecules/file-importer";
 import { readApplication } from "../utills/bulk-file-reader/application";
 import { Modal } from "bootstrap";
 import { applicationBulkHeaders } from "../constants/headers/application-bulk.headers";
+import { PAGELIMIT } from "../routes";
 
 export default function Application() {
   const [bulUpload, setBulkUpload] = useState(false);
@@ -85,6 +86,7 @@ export default function Application() {
   const actionList = useSelector(actionListSelector);
   const candidateList = useSelector(managerProfileListSelector);
   const jobList = useSelector(jobSearchListSelector);
+  const addStatus = useSelector(applicationRequestSuccessSelector)
   const tagList = useSelector(tagListSelector);
   const companyList = useSelector(companyListSelector);
   const [filtering, setFiltering] = useState(false);
@@ -97,6 +99,12 @@ export default function Application() {
   const [viewData, setViewData] = useState([]);
   const dispatch = useDispatch();
   const history = useHistory();
+
+  useEffect(() => {
+    setAdding(false)
+    setEditing(false)
+    setUserData({})
+  }, [addStatus])
 
   const createTag = (value) => {
     dispatch(tagCreateRequest(value));
@@ -140,10 +148,17 @@ export default function Application() {
   }, []);
   return (
     <div>
-      <Button variant="Primary" onClick={() => setAdding(!add)}>
+      <Button variant="Primary" onClick={() => {
+        setUserData({})
+        setEditing(false)
+        setFiltering(false)
+        setAdding(!add)}}>
         Create Application
       </Button>
-      <Button variant="Primary" onClick={() => setFiltering(!filtering)}>
+      <Button variant="Primary" onClick={() => {
+        setEditing(false)
+        setAdding(false)
+        setFiltering(!filtering)}}>
         Filter Candidate
       </Button>
       <Button
@@ -154,6 +169,10 @@ export default function Application() {
       >
         Bulk Create Applications
       </Button>
+      <a
+        download={true}
+        href={`${process.env.S3URL}/application - Sheet1.csv`}
+      >Download Sample File</a>
       {success && success.length > 0 && (
         <Button
           variant="Primary"
@@ -198,6 +217,7 @@ export default function Application() {
           headers={applicationBulkHeaders}
           list={success}
           onEdit={(data) => {
+            setAdding(false)
             setEditing(true);
             setUserData({ ...data });
           }}
@@ -261,6 +281,11 @@ export default function Application() {
               }
               query += `job_company_name=${updated.job_company_name}`;
             }
+
+            if (query.length > 1) {
+              query += "&";
+            }
+            query += `page=1&limit=${PAGELIMIT}`
 
             history.push({
               search: query,

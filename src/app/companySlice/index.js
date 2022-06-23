@@ -5,6 +5,7 @@ const companySlice = createSlice({
   initialState: {
     companyList: [],
     company: {},
+    loading: false,
   },
   reducers: {
     companyDeleteRequest: (state, action) => {
@@ -20,11 +21,11 @@ const companySlice = createSlice({
       state.loading = true;
     },
     companyListSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.companyList = [...action.payload];
     },
     companyRequestSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.company = { ...action.payload };
     },
     companyError: (state, action) => {
@@ -35,7 +36,7 @@ const companySlice = createSlice({
 
 export const companyListSelector = (state) => state?.company?.companyList;
 export const companySelector = (state) => state?.company?.company;
-
+export const companyLoading = state => state?.company?.loading;
 export const {
   companyCreateRequest,
   companyDeleteRequest,

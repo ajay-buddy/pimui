@@ -8,8 +8,9 @@ const authSlice = createSlice({
     loading: false,
     error: null,
     uploadedProfileSuccess: [],
-    uploadedProfileFailed: [],
-    profileUpdateUrl: "",
+    bulkFailed: [],
+    bulkSuccess: "",
+    loading: false,
   },
   reducers: {
     getProfileUrlRequest: (state, action) => {
@@ -17,14 +18,17 @@ const authSlice = createSlice({
     },
     getProfileUrlSuccess: (state, action) => {
       state.profileUpdateUrl = action?.payload;
+      state.loading = false;
     },
     bulkRegisterRequest: (state, action) => {
       state.loading = true;
-      state.uploadedProfileSuccess = [];
-      state.uploadedProfileFailed = [];
+      state.bulkFailed = []
+      state.bulkSuccess = []
     },
     bulkRegisterSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
+      state.bulkFailed = action?.payload?.failed || [];
+      state.bulkSuccess = action?.payload?.success || [];
     },
     loginRequest: (state, action) => {
       state.loading = true;
@@ -57,7 +61,11 @@ const authSlice = createSlice({
 export const authSelector = (state) => state?.auth?.isAuthenticated;
 export const registerSelector = (state) => state?.auth?.username;
 export const profileUrlSelector = (state) => state.auth?.profileUpdateUrl;
-
+export const bulkRegisterSuccessSelector = (state) => ({
+  success: state?.auth?.bulkSuccess,
+  failed: state?.auth?.bulkFailed,
+});
+export const authLoading = state => state?.auth?.loading;
 export const {
   getProfileUrlRequest,
   getProfileUrlSuccess,

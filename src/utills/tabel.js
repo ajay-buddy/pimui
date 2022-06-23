@@ -1,3 +1,5 @@
+import PDFViewer from "../components/molecules/PdfViewer";
+
 export const getTableRow = (h, x) => {
   let val = "";
   let d = x;
@@ -38,16 +40,16 @@ export const getTableRow = (h, x) => {
     val = h.showLastValue ? arr[arr.length - 1] : arr.join(", ");
   }
   if (h.type === "Download" && (h.updateValue ? h.updateValue(val) : val)) {
+  
     return (
       <td>
-        <a
-          download={h.updateValue ? h.updateValue(val) : val}
-          href={`https://ats-profile-picture.s3.ap-south-1.amazonaws.com/${
+        <a 
+        href={`${process.env.S3URL}/${
             h.updateValue ? h.updateValue(val) : val
           }`}
-        >
-          Resume
-        </a>
+          target="_blank" rel="noreferrer noopener">
+        Resume
+</a>
       </td>
     );
   }

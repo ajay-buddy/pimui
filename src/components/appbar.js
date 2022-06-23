@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import history from "../history";
-import { ROUTES } from "../routes";
+import { PAGELIMIT, ROUTES } from "../routes";
 import { accessToken, removeAccessToken } from "../app/utils";
 
 const useStyles = makeStyles((theme) => ({
@@ -40,19 +40,19 @@ export default function HeaderAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            OTSOFTS
+            CBrains
           </Typography>
           {!accessToken ? (
             <>
               <Button color="inherit" onClick={() => navigate(ROUTES.LOGIN)}>
                 Login
               </Button>
-              <Button color="inherit" onClick={() => navigate(ROUTES.REGISTER)}>
+              {/* <Button color="inherit" onClick={() => navigate(ROUTES.REGISTER)}>
                 Register
-              </Button>
+              </Button> */}
             </>
           ) : (
-            <>
+            <div>
               <Button
                 color="inherit"
                 onClick={() => {
@@ -67,39 +67,27 @@ export default function HeaderAppBar() {
               </Button>
               <Button
                 color="inherit"
-                onClick={() => navigate(ROUTES.CANDIDATES)}
+                onClick={() => navigate(`${ROUTES.CANDIDATES}?limit=${PAGELIMIT}&page=1`)}
               >
                 Candidates
               </Button>
-              <Button color="inherit" onClick={() => navigate(ROUTES.ADMIN)}>
+              <Button color="inherit" onClick={() => navigate(`${ROUTES.ADMIN}?limit=${PAGELIMIT}&page=1`)}>
                 Admins
               </Button>
 
-              <Button color="inherit" onClick={() => navigate(ROUTES.SPOCS)}>
+              <Button color="inherit" onClick={() => navigate(`${ROUTES.SPOCS}?limit=${PAGELIMIT}&page=1`)}>
                 Spoc
               </Button>
-              <Button color="inherit" onClick={() => navigate(ROUTES.JOB)}>
+              <Button color="inherit" onClick={() => navigate(`${ROUTES.JOB}?limit=${PAGELIMIT}&page=1`)}>
                 Job
               </Button>
               <Button
                 color="inherit"
-                onClick={() => navigate(ROUTES.APPLICATIONS)}
+                onClick={() => navigate(`${ROUTES.APPLICATIONS}?limit=${PAGELIMIT}&page=1`)}
               >
                 Applications
               </Button>
-              {/* <Button color="inherit" onClick={() => navigate(ROUTES.VENDORS)}>
-                Vendors
-              </Button>
-              <Button color="inherit" onClick={() => navigate(ROUTES.CUSTOMER)}>
-                Customers
-              </Button>
-              <Button color="inherit" onClick={() => navigate(ROUTES.PURCHASE)}>
-                Purchase
-              </Button>
-              <Button color="inherit" onClick={() => navigate(ROUTES.ORDERS)}>
-                Orders
-              </Button> */}
-            </>
+            </div>
           )}
         </Toolbar>
       </AppBar>

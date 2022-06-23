@@ -71,6 +71,7 @@ async function profileCreateApi(data) {
 export function* profileCreateSaga({ payload }) {
   try {
     const user = yield call(profileCreateApi, payload);
+    yield put(profileRequestSuccess(user))
     yield put(profileListRequest());
   } catch (e) {
     yield put(profileError(e.message));

@@ -5,6 +5,7 @@ const actionSlice = createSlice({
   initialState: {
     actionList: [],
     action: {},
+    loading: false,
   },
   reducers: {
     actionDeleteRequest: (state, action) => {
@@ -20,11 +21,11 @@ const actionSlice = createSlice({
       state.loading = true;
     },
     actionListSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.actionList = [...action.payload];
     },
     actionRequestSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.action = { ...action.payload };
     },
     actionError: (state, action) => {
@@ -35,6 +36,8 @@ const actionSlice = createSlice({
 
 export const actionListSelector = (state) => state?.action?.actionList;
 export const actionSelector = (state) => state?.action?.action;
+
+export const actionLoading = state => state?.action?.loading;
 
 export const {
   actionCreateRequest,

@@ -4,7 +4,7 @@ export const AdminProfileFormConfig = ({ managerList, getManager }) => ({
   name: "Profile",
   config: [
     {
-      label: "Name",
+      label: "Name [Full Name]",
       key: "name",
       type: FIELD_TYPE.INPUT,
     },

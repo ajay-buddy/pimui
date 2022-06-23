@@ -8,13 +8,14 @@ const jobSlice = createSlice({
     uploadedJobSuccess: [],
     uploadedJobFailed: [],
     jobListSearch: [],
+    loading: false,
   },
   reducers: {
     bulkJobRequest: (state, action) => {
       state.loading = true;
     },
     bulkJobSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.uploadedJobSuccess = state.uploadedJobSuccess.concat(
         action?.payload?.success
       );
@@ -32,7 +33,7 @@ const jobSlice = createSlice({
       state.loading = true;
     },
     jobSearchListSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.jobListSearch = [...action.payload];
     },
     jobListRequest: (state, action) => {
@@ -42,11 +43,11 @@ const jobSlice = createSlice({
       state.loading = true;
     },
     jobListSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.jobList = [...action.payload];
     },
     jobRequestSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.job = { ...action.payload };
     },
     jobError: (state, action) => {
@@ -54,7 +55,7 @@ const jobSlice = createSlice({
     },
   },
 });
-
+export const jobLoading = state => state?.job?.loading;
 export const jobListSelector = (state) => state?.job?.jobList;
 export const jobSearchListSelector = (state) => state?.job?.jobListSearch;
 export const jobSelector = (state) => state?.job?.job;
@@ -62,6 +63,8 @@ export const jobBulkUploadSelector = (state) => ({
   success: state?.job?.uploadedJobSuccess,
   failed: state?.job?.uploadedJobFailed,
 });
+
+export const jobRequestSuccessSelector = (state) => state?.job?.job;
 
 export const {
   bulkJobRequest,

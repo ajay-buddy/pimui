@@ -78,7 +78,7 @@ export const SpocFilterConfig = ({
       type: FIELD_TYPE.INPUT,
     },
     {
-      label: "phone",
+      label: "Phone",
       key: "phone",
       type: FIELD_TYPE.INPUT,
     },

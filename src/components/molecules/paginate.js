@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import qs from "query-string";
 
+import { PAGELIMIT } from "../../routes";
+
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -28,20 +30,25 @@ export default function Paginate({ total, updateFunction }) {
   const [nextDots, setNextDots] = useState(false);
   const query = qs.parse(history.location.search);
 
-  const limit = 10;
-  const pages = Math.ceil(parseInt(total || 0) / limit);
+  const pages = Math.ceil(parseInt(total || 0) / PAGELIMIT);
   const arr = new Array(pages).fill("");
 
   let current = (query && query.page) || 0;
   current = parseInt(current);
   return (
+    <>
+    {total > 0 && <div style={{
+      fontSize: "x-large",
+      fontWeight: "bold",
+      marginTop: "20px"
+    }}>{total && <div>{`Showing ${current * PAGELIMIT > total ? total : current * PAGELIMIT} Records of ${total}`}</div>}</div>}
     <Wrapper>
-      {current > 0 && (
+      {current > 1 && (
         <PageNumber
           onClick={() => {
             const q = qs.stringify({
               ...query,
-              ...{ page: current - 1, limit },
+              ...{ page: current - 1, limit: PAGELIMIT },
             });
             history.push({
               search: q,
@@ -72,7 +79,7 @@ export default function Paginate({ total, updateFunction }) {
             onClick={() => {
               const q = qs.stringify({
                 ...query,
-                ...{ page: index + 1, limit },
+                ...{ page: index + 1, limit: PAGELIMIT },
               });
               history.push({
                 search: q,
@@ -85,12 +92,12 @@ export default function Paginate({ total, updateFunction }) {
         );
       })}
       {current <= pages && nextDots && <PageNumber>...</PageNumber>}
-      {current <= pages && (
+      {current * PAGELIMIT < total && current <= pages && (
         <PageNumber
           onClick={() => {
             const q = qs.stringify({
               ...query,
-              ...{ page: current + 1, limit },
+              ...{ page: current + 1, limit: PAGELIMIT },
             });
             history.push({
               search: q,
@@ -102,5 +109,6 @@ export default function Paginate({ total, updateFunction }) {
         </PageNumber>
       )}
     </Wrapper>
+    </>
   );
 }

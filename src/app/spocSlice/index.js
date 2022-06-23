@@ -8,6 +8,7 @@ const spocSlice = createSlice({
     spoc: {},
     uploadedSpocSuccess: [],
     uploadedSpocFailed: [],
+    loading: false,
   },
   reducers: {
     spocListSearchRequest: (state, action) => {
@@ -21,7 +22,7 @@ const spocSlice = createSlice({
       state.loading = true;
     },
     bulkSpocSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.uploadedSpocFailed = state.uploadedSpocFailed.concat(
         action?.payload?.failed
       );
@@ -42,11 +43,11 @@ const spocSlice = createSlice({
       state.loading = true;
     },
     spocListSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.spocList = [...action.payload];
     },
     spocRequestSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.spoc = { ...action.payload };
     },
     spocError: (state, action) => {
@@ -63,6 +64,8 @@ export const spocBulkUploadSelector = (state) => ({
   failed: state?.spoc?.uploadedSpocFailed,
 });
 
+export const spocRequestSuccessSelector = (state) => state?.spoc?.spoc;
+export const spocLoading = state => state?.spoc?.loading;
 export const {
   bulkSpocRequest,
   bulkSpocSuccess,

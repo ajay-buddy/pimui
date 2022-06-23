@@ -9,7 +9,7 @@ export const CandidateProfileFormConfig = ({
   name: "Profile",
   config: [
     {
-      label: "Name",
+      label: "Name [Full Name]",
       key: "name",
       type: FIELD_TYPE.INPUT,
     },
@@ -24,12 +24,12 @@ export const CandidateProfileFormConfig = ({
       type: FIELD_TYPE.INPUT,
     },
     {
-      label: "Current Location",
+      label: "Current Location [City Name]",
       key: "c_location",
       type: FIELD_TYPE.INPUT,
     },
     {
-      label: "Prefered Location/s",
+      label: "Preferred Location [City Name]",
       key: "p_location",
       type: FIELD_TYPE.INPUT,
     },
@@ -59,7 +59,7 @@ export const CandidateProfileFormConfig = ({
       type: FIELD_TYPE.NUMBER,
     },
     {
-      label: "Primary Tags",
+      label: "Primary Tags [like Java/Python/React/Angular etc]",
       key: "profile_tags",
       type: FIELD_TYPE.MULTISELECT,
       options: tagList,
@@ -68,7 +68,7 @@ export const CandidateProfileFormConfig = ({
       labelKey: "name",
     },
     {
-      label: "Sec Tags",
+      label: "Secondary Tags [like SQL/AWS/Cloud/ML/AI etc]",
       key: "profile_stags",
       type: FIELD_TYPE.MULTISELECT,
       options: tagList,
@@ -95,7 +95,7 @@ export const CandidateProfileFilterFormConfig = ({
   name: "Profile",
   config: [
     {
-      label: "Name",
+      label: "Name [Full Name]",
       key: "name",
       type: FIELD_TYPE.INPUT,
     },
@@ -105,7 +105,7 @@ export const CandidateProfileFilterFormConfig = ({
       type: FIELD_TYPE.INPUT,
     },
     {
-      label: "Primary Tags",
+      label: "Primary Tags [like Java/Python/React/Angular etc]",
       key: "profile_tags",
       type: FIELD_TYPE.MULTISELECT,
       options: tagList,
@@ -114,7 +114,7 @@ export const CandidateProfileFilterFormConfig = ({
       labelKey: "name",
     },
     {
-      label: "Sec Tags",
+      label: "Secondary Tags [like SQL/AWS/Cloud/ML/AI etc]",
       key: "profile_stags",
       type: FIELD_TYPE.MULTISELECT,
       options: tagList,
@@ -128,52 +128,52 @@ export const CandidateProfileFilterFormConfig = ({
       type: FIELD_TYPE.INPUT,
     },
     {
-      label: "Current Location",
+      label: "Current Location [City Name]",
       key: "c_location",
       type: FIELD_TYPE.INPUT,
     },
     {
-      label: "Preffered Location",
+      label: "Preferred Location [City Name]",
       key: "p_location",
       type: FIELD_TYPE.INPUT,
     },
     {
-      label: "Minimun Experience",
+      label: "Minimun Experience IN NUMBERS",
       key: "min_experience",
       type: FIELD_TYPE.NUMBER,
     },
     {
-      label: "Maximum Experience",
+      label: "Maximum Experience IN NUMBERS",
       key: "max_experience",
       type: FIELD_TYPE.NUMBER,
     },
     {
-      label: "Minimun Current CTC",
+      label: "Minimun Current CTC IN NUMBERS",
       key: "min_current_ctc",
       type: FIELD_TYPE.NUMBER,
     },
     {
-      label: "Maximum Current CTC",
+      label: "Maximum Current CTC IN NUMBERS",
       key: "max_current_ctc",
       type: FIELD_TYPE.NUMBER,
     },
     {
-      label: "Minimun Expected CTC",
+      label: "Minimun Expected CTC IN NUMBERS",
       key: "min_expected_ctc",
       type: FIELD_TYPE.NUMBER,
     },
     {
-      label: "Maximum Expected CTC",
+      label: "Maximum Expected CTC IN NUMBERS",
       key: "max_expected_ctc",
       type: FIELD_TYPE.NUMBER,
     },
     {
-      label: "Minimun Notice Period",
+      label: "Minimun Notice Period IN NUMBERS",
       key: "min_notice",
       type: FIELD_TYPE.NUMBER,
     },
     {
-      label: "Maximum Notice Period",
+      label: "Maximum Notice Period IN NUMBERS",
       key: "max_notice",
       type: FIELD_TYPE.NUMBER,
     },

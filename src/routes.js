@@ -9,3 +9,4 @@ export const ROUTES = {
   JOB: "/job",
   APPLICATIONS: "/application",
 };
+export const PAGELIMIT = 100

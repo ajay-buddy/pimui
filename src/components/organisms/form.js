@@ -41,7 +41,7 @@ const getFeild = ({
       />
       {downloadKey && value[downloadKey] && (
         <a
-          href={`https://ats-profile-picture.s3.ap-south-1.amazonaws.com/${value[downloadKey]}`}
+          href={`${process.env.S3URL}/${value[downloadKey]}`}
           download={value[downloadKey]}
         >
           Download

@@ -51,6 +51,7 @@ async function spocCreateApi(data) {
 export function* spocCreateSaga({ payload }) {
   try {
     const user = yield call(spocCreateApi, payload);
+    yield put(spocRequestSuccess(user))
     yield put(spocListRequest());
   } catch (e) {
     yield put(spocError(e.message));

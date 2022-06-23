@@ -5,6 +5,7 @@ const tagSlice = createSlice({
   initialState: {
     tagList: [],
     tag: {},
+    loading: false,
   },
   reducers: {
     tagDeleteRequest: (state, action) => {
@@ -20,11 +21,11 @@ const tagSlice = createSlice({
       state.loading = true;
     },
     tagListSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.tagList = [...action.payload];
     },
     tagRequestSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.tag = { ...action.payload };
     },
     tagError: (state, action) => {
@@ -35,7 +36,7 @@ const tagSlice = createSlice({
 
 export const tagListSelector = (state) => state?.tag?.tagList;
 export const tagSelector = (state) => state?.tag?.tag;
-
+export const tagLoading = state => state?.tag?.loading;
 export const {
   tagCreateRequest,
   tagDeleteRequest,

@@ -39,6 +39,7 @@ import {
   spocCreateRequest,
   spocDeleteRequest,
   spocListRequest,
+  spocRequestSuccessSelector,
 } from "../app/spocSlice";
 import { spocListSelector } from "../app/spocSlice/index";
 import { readSpoc } from "../utills/bulk-file-reader/spoc";
@@ -46,6 +47,7 @@ import FileUploader from "../components/molecules/file-importer/index";
 import Paginate from "../components/molecules/paginate";
 import { useHistory } from "react-router-dom";
 import { spocBulkHeaders } from "../constants/headers/spoc-bulk.headers";
+import { PAGELIMIT } from "../routes";
 
 export default function Spoc() {
   const [bulUpload, setBulkUpload] = useState(false);
@@ -54,6 +56,7 @@ export default function Spoc() {
   const companyList = useSelector(companyListSelector);
   const recruiterList = useSelector(managerProfileListSelector);
   const { success, failed } = useSelector(spocBulkUploadSelector);
+  const addStatus = useSelector(spocRequestSuccessSelector)
   const [filtering, setFiltering] = useState(false);
   const [filterData, setFilterData] = useState({});
 
@@ -66,6 +69,12 @@ export default function Spoc() {
   });
   const dispatch = useDispatch();
   const history = useHistory();
+
+  useEffect(() => {
+    setAdding(false)
+    setEditing(false)
+    setUserData({})
+  }, [addStatus])
 
   const createTag = (value) => {
     dispatch(tagCreateRequest(value));
@@ -97,11 +106,19 @@ export default function Spoc() {
   }, []);
   return (
     <div>
-      <Button variant="Primary" onClick={() => setAdding(!add)}>
+      <Button variant="Primary" onClick={() => {
+        setEditing(false)
+        setUserData({})
+        setFiltering(false)
+        setAdding(!add)}}>
         Create Spoc
       </Button>
-      <Button variant="Primary" onClick={() => setFiltering(!filtering)}>
-        Filter Soc
+      <Button variant="Primary" onClick={() => {
+        setEditing(false)
+        setAdding(false)
+        setFiltering(!filtering)
+        }}>
+        Filter Spoc
       </Button>
       <Button
         variant="Primary"
@@ -111,6 +128,10 @@ export default function Spoc() {
       >
         Bulk Create Spoc
       </Button>
+      <a
+        download={true}
+        href={`${process.env.S3URL}/spoc - Sheet1.csv`}
+      >Download Sample File</a>
       {success && success.length > 0 && (
         <Button
           variant="Primary"
@@ -135,6 +156,7 @@ export default function Spoc() {
         <FileUploader
           readFunction={async (data, filename) => {
             const result = readSpoc(data, filename);
+            console.log(result)
             result.forEach((d) => dispatch(bulkSpocRequest(d)));
             // dispatch(bulkRegisterRequest(result));
           }}
@@ -145,6 +167,7 @@ export default function Spoc() {
           headers={spocBulkHeaders}
           list={success}
           onEdit={(data) => {
+            setAdding(false)
             setEditing(true);
             setUserData({ ...data });
           }}
@@ -228,7 +251,10 @@ export default function Spoc() {
               }
               query += `recruiters=${updated.recruiters}`;
             }
-
+            if (query.length > 1) {
+              query += "&";
+            }
+            query += `page=1&limit=${PAGELIMIT}`
             history.push({
               search: query,
             });
@@ -261,12 +287,19 @@ export default function Spoc() {
                 data.company = data.company.value;
               }
             }
+            if(data.owner) {
+              if(data.owner.value) {
+                data.owner = data.owner.value
+              }
+            }
             if (data.recruiters) {
               data.recruiters = data.recruiters?.map((d) => {
                 if (d.__isNew__) {
                   return { email: d.value };
                 } else if (d.value) {
                   return { ...d.value };
+                } else {
+                  return d;
                 }
               });
             }

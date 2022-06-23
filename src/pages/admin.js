@@ -7,6 +7,7 @@ import {
   profileDeleteRequest,
   managerProfileListRequest,
   managerProfileListSelector,
+  profileRequestSuccessSelector,
 } from "../app/profileSlice/index";
 import { adminHeaders } from "../constants/headers/admin.headers";
 import ListView from "../components/organisms/tabel/tabel";
@@ -21,7 +22,8 @@ import {
   tagCreateRequest,
   tagListRequest,
 } from "../app/tagSlice/index";
-import { bulkRegisterRequest, registerRequest } from "../app/authSlice";
+import {adminBulkHeaders} from "../constants/headers/admin-bulk.headers"
+import { bulkRegisterRequest, registerRequest,registerSelector, bulkRegisterSuccessSelector } from "../app/authSlice";
 import { actionListRequest } from "../app/actionSlice";
 import Paginate from "../components/molecules/paginate";
 import { useHistory } from "react-router-dom";
@@ -31,12 +33,26 @@ export default function Admin() {
   const [profileList, profileTotal] = useSelector(profileListSelector);
   const tagList = useSelector(tagListSelector);
   const managerList = useSelector(managerProfileListSelector);
+  const addStatus = useSelector(profileRequestSuccessSelector);
+  const { success, failed } = useSelector(bulkRegisterSuccessSelector);
+
+  const [showProgress, setShowProgress] = useState({
+    success: false,
+    failed: false,
+  });
+  const registerStatus = useSelector(registerSelector);
 
   const [userData, setUserData] = useState({});
   const [add, setAdding] = useState(false);
   const [edit, setEditing] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
+
+  useEffect(() => {
+    setUserData({})
+    setAdding(false);
+    setEditing(false)
+  },[addStatus,registerStatus])
 
   const createTag = (value) => {
     dispatch(tagCreateRequest(value));
@@ -65,7 +81,10 @@ export default function Admin() {
   }, []);
   return (
     <div>
-      <Button variant="Primary" onClick={() => setAdding(!add)}>
+      <Button variant="Primary" onClick={() => {
+        setUserData({});
+        setEditing(false)
+        setAdding(!add)}}>
         Create Admin
       </Button>
       <Button
@@ -76,13 +95,61 @@ export default function Admin() {
       >
         Bulk Create Admin
       </Button>
+      <a
+        download={true}
+        href={`${process.env.S3URL}/admin - Admin.csv`}
+      >Download Sample File</a>
+      {success && success.length > 0 && (
+        <Button
+          variant="Primary"
+          onClick={() => {
+            setShowProgress({ success: true, failed: false });
+          }}
+        >
+          {`Successfully Uploaded: ${success.length} Records`}
+        </Button>
+      )}
+      {failed && failed.length > 0 && (
+        <Button
+          variant="Primary"
+          onClick={() => {
+            setShowProgress({ success: false, failed: true });
+          }}
+        >
+          {`Failed to Upload: ${failed.length} Records`}
+        </Button>
+      )}
       {bulUpload && (
         <FileUploader
           readFunction={async (data, filename) => {
             const result = readAdmin(data, filename);
-            dispatch(dispatch(bulkRegisterRequest(result)));
-            // result.forEach((d) => dispatch(bulkRegisterRequest(result)));
-            // dispatch(bulkRegisterRequest(result));
+            dispatch(bulkRegisterRequest(result));
+          }}
+        />
+      )}
+      {showProgress.success && success && success.length > 0 && (
+        <ListView
+          headers={adminBulkHeaders}
+          list={success}
+          onEdit={(data) => {
+            if(data && data.profile) {
+              setAdding(false)
+              setEditing(true);
+              setUserData({ ...data.profile });
+            }
+          }}
+        />
+      )}
+      {showProgress.failed && failed && failed.length > 0 && (
+        <ListView
+          headers={adminBulkHeaders}
+          list={failed}
+          onEdit={(data) => {
+            if(data && data.profile) {
+              setAdding(false)
+              setEditing(true);
+              setUserData({ ...data.profile });
+            }
           }}
         />
       )}
@@ -142,6 +209,7 @@ export default function Admin() {
         list={profileList}
         onDelete={(id) => dispatch(profileDeleteRequest(id))}
         onEdit={(data) => {
+          setAdding(false)
           setEditing(true);
           setUserData({ ...data });
         }}

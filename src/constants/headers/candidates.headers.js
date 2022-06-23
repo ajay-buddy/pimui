@@ -31,3 +31,18 @@ export const candidateHeaders = [
     type: "Download",
   },
 ];
+
+export const candidateStatusHeaders = [
+  {
+    label: "Name",
+    key: "name",
+  },
+  {
+    label: "Updated At",
+    key: "createdAt",
+  },
+  {
+    label: "Updated By",
+    key: "createdBy",
+  }
+];

@@ -9,6 +9,8 @@ import {
   applicationError,
   bulkApplicationRequest,
   bulkApplicationSuccess,
+  userApplicationListRequest,
+  userApplicationListSuccess,
 } from "./index";
 import history from "../../history";
 import { ROUTES } from "../../routes";
@@ -22,6 +24,7 @@ async function applicationCreateApi(data) {
 export function* applicationCreateSaga({ payload }) {
   try {
     const user = yield call(applicationCreateApi, payload);
+    yield put(applicationRequestSuccess(user))
     yield put(applicationListRequest(user));
   } catch (e) {
     yield put(applicationError(e.message));
@@ -37,6 +40,20 @@ export function* applicationListSaga({ payload }) {
   try {
     const user = yield call(applicationListApi, payload);
     yield put(applicationListSuccess(user));
+  } catch (e) {
+    yield put(applicationError(e.message));
+  }
+}
+
+async function userApplicationListApi({ query,id }) {
+  const resp = await axios.get(`application/user/${id}`);
+  return resp.data;
+}
+
+export function* userApplicationListSaga({ payload }) {
+  try {
+    const user = yield call(userApplicationListApi, payload);
+    yield put(userApplicationListSuccess(user));
   } catch (e) {
     yield put(applicationError(e.message));
   }
@@ -58,6 +75,7 @@ export function* applicationBulkSaga({ payload }) {
 
 export function* watchApplicationSaga() {
   yield takeEvery(applicationListRequest, applicationListSaga);
+  yield takeEvery(userApplicationListRequest, userApplicationListSaga);
   yield takeEvery(applicationCreateRequest, applicationCreateSaga);
   yield takeEvery(bulkApplicationRequest, applicationBulkSaga);
 }

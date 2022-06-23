@@ -59,6 +59,7 @@ async function jobCreateApi(data) {
 export function* jobCreateSaga({ payload }) {
   try {
     const user = yield call(jobCreateApi, payload);
+    yield put(jobRequestSuccess(user))
     yield put(jobListRequest());
   } catch (e) {
     yield put(jobError(e.message));

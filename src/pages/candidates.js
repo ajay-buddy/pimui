@@ -11,8 +11,9 @@ import { TYPE } from "../constants";
 import {
   profileListSelector,
   profileDeleteRequest,
+  profileRequestSuccessSelector,
 } from "../app/profileSlice/index";
-import { candidateHeaders } from "../constants/headers/candidates.headers";
+import { candidateHeaders, candidateStatusHeaders } from "../constants/headers/candidates.headers";
 import ListView from "../components/organisms/tabel/tabel";
 import { Button } from "@material-ui/core";
 import CustomForm from "../components/organisms/form";
@@ -33,6 +34,10 @@ import {
   profileUrlSelector,
   registerRequest,
 } from "../app/authSlice";
+import {
+  userApplicationListRequest,
+  userApplicationRequestSuccessSelector,
+} from "../app/applicationSlice";
 import { actionListRequest } from "../app/actionSlice";
 import FileUploader from "../components/molecules/file-importer";
 import { readCandidates } from "../utills/bulk-file-reader/candidates";
@@ -40,12 +45,15 @@ import { useHistory } from "react-router-dom";
 import Paginate from "../components/molecules/paginate";
 import axios from "axios";
 import { candidateBulkHeaders } from "../constants/headers/candidates-bulk.headers";
+import { PAGELIMIT } from "../routes";
 
 export default function Candidates() {
   const [bulUpload, setBulkUpload] = useState(false);
   const [profileList, profileTotal] = useSelector(profileListSelector);
   const tagList = useSelector(tagListSelector);
   const [managerList, managerListTotal] = useSelector(profileListSelector);
+  const addStatus = useSelector(profileRequestSuccessSelector);
+  
   const { success, failed } = useSelector(profileBulkUploadSelector);
   const [showProgress, setShowProgress] = useState({
     success: false,
@@ -56,6 +64,7 @@ export default function Candidates() {
   const history = useHistory();
 
   useEffect(() => {
+   
     dispatch(
       profileListRequest({
         type: TYPE.CANDIDATE,
@@ -63,14 +72,42 @@ export default function Candidates() {
       })
     );
   }, []);
-
+  useEffect(() => {
+    setUserData({});
+    setAdding(false);
+    setEditing(false);
+  }, [addStatus]);
   const [userData, setUserData] = useState({});
   const [add, setAdding] = useState(false);
   const [edit, setEditing] = useState(false);
   const [filtering, setFiltering] = useState(false);
   const [filterData, setFilterData] = useState({});
-  const dispatch = useDispatch();
+  const [userApplication, userApplicationCount] = useSelector(userApplicationRequestSuccessSelector);
+  const [statusLogs, setStatusLogs] = useState([]);
 
+  useEffect(() => {
+     
+     const logs = [];
+
+     if(userApplication && Array.isArray(userApplication)) {
+      for(let i = 0; i < userApplication.length; i++) {
+       if(!userApplication[i].logs) continue;
+        for(let j = 0; j < userApplication[i].logs.length; j++) {
+          console.log(userApplication[i])
+         if(userApplication[i] && userApplication[i].logs) {
+           logs.push({
+             name: userApplication[i].logs[j]?.action?.name,
+             createdAt: userApplication[i].logs[j]?.created_at,
+             createdBy: userApplication[i].logs[j]?.profile?.name,
+           })
+         }
+        }
+      }
+     }
+     setStatusLogs(logs)
+  }, [userApplication]);
+console.log("====> ", statusLogs )
+  const dispatch = useDispatch();
   useEffect(async () => {
     if (resumeUploadUrl && fileData) {
       try {
@@ -80,6 +117,7 @@ export default function Candidates() {
           url: resumeUploadUrl,
           headers: {
             "Content-Type": "multipart/form-data",
+            "Content-Disposition": "inline",
           },
           onUploadProgress: (e) => console.log("==>", e),
         });
@@ -114,10 +152,25 @@ export default function Candidates() {
 
   return (
     <div>
-      <Button variant="Primary" onClick={() => setAdding(!add)}>
+      <Button
+        variant="Primary"
+        onClick={() => {
+          setUserData({});
+          setAdding(!add);
+          setFiltering(false);
+          setEditing(false);
+        }}
+      >
         Create Candidate
       </Button>
-      <Button variant="Primary" onClick={() => setFiltering(!filtering)}>
+      <Button
+        variant="Primary"
+        onClick={() => {
+          setAdding(false);
+          setEditing(false);
+          setFiltering(!filtering);
+        }}
+      >
         Filter Candidate
       </Button>
       <Button
@@ -128,6 +181,12 @@ export default function Candidates() {
       >
         Bulk Create Candidate
       </Button>
+      <a
+        download={true}
+        href={`${process.env.S3URL}/candidate - Sheet1.csv`}
+      >
+        Download Sample File
+      </a>
       {success && success.length > 0 && (
         <Button
           variant="Primary"
@@ -162,6 +221,7 @@ export default function Candidates() {
           headers={candidateBulkHeaders}
           list={success}
           onEdit={(data) => {
+            setAdding(false);
             setEditing(true);
             setUserData({ ...data });
           }}
@@ -172,6 +232,7 @@ export default function Candidates() {
           headers={candidateBulkHeaders}
           list={failed}
           onEdit={(data) => {
+            setAdding(false);
             setEditing(true);
             setUserData({ ...data });
           }}
@@ -344,6 +405,11 @@ export default function Candidates() {
               query += `headline=${updated.headline}`;
             }
 
+            if (query.length > 1) {
+              query += "&";
+            }
+            query += `page=1&limit=${PAGELIMIT}`;
+
             history.push({
               search: query,
             });
@@ -364,7 +430,18 @@ export default function Candidates() {
           setEditing(true);
           setUserData({ ...data });
         }}
+         viewDetails={d => {
+          setStatusLogs([]);
+          dispatch(userApplicationListRequest({
+          id: d.id
+        }));
+      }}
+        details={{
+          headers: candidateStatusHeaders,
+          list: statusLogs
+        }}
       />
+     
       <Paginate
         total={profileTotal || 0}
         updateFunction={(q) => {

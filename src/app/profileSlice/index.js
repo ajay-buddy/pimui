@@ -8,6 +8,7 @@ const profileSlice = createSlice({
     profile: {},
     bulkSuccess: [],
     bulkFailed: [],
+    loading: false,
   },
   reducers: {
     profileBulkCreateRequest: (state, action) => {
@@ -25,10 +26,10 @@ const profileSlice = createSlice({
       state.loading = true;
     },
     managerProfileListRequest: (state, action) => {
-      state.loading = true;
+      // state.loading = true;
     },
     managerProfileListSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.managerList = [...action.payload];
     },
     profileListRequest: (state, action) => {
@@ -38,11 +39,11 @@ const profileSlice = createSlice({
       state.loading = true;
     },
     profileListSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.profileList = [...action.payload];
     },
     profileRequestSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.profile = { ...action.payload };
     },
     profileError: (state, action) => {
@@ -50,7 +51,7 @@ const profileSlice = createSlice({
     },
   },
 });
-
+export const profileLoading = state => state?.profile?.loading;
 export const profileListSelector = (state) => state?.profile?.profileList;
 export const managerProfileListSelector = (state) =>
   state?.profile?.managerList;
@@ -59,6 +60,7 @@ export const profileBulkUploadSelector = (state) => ({
   success: state?.profile?.bulkSuccess,
   failed: state?.profile?.bulkFailed,
 });
+export const profileRequestSuccessSelector = (state) => state?.profile?.profile;
 
 export const {
   profileBulkCreateSuccess,

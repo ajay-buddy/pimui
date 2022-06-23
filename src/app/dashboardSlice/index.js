@@ -4,13 +4,14 @@ const dashboardSlice = createSlice({
   name: "dashboardSlice",
   initialState: {
     myProfile: {},
+    loading: false
   },
   reducers: {
     getMyProfileRequest: (state, action) => {
       state.loading = true;
     },
     getMyProfileSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
 
       state.myProfile = { ...action?.payload };
     },
@@ -19,7 +20,7 @@ const dashboardSlice = createSlice({
     },
   },
 });
-
+export const dashboardLoading = state => state?.dashboard?.loading;
 export const myProfileSelector = (state) => state?.dashboard?.myProfile;
 
 export const { getMyProfileRequest, getMyProfileSuccess, dashboardError } =
